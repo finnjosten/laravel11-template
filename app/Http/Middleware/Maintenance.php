@@ -19,7 +19,7 @@ class Maintenance
 
         if (env('SETTING_MAINTENANCE_TOTAL')) return response()->view('pages.maintenance');
 
-        if (str_contains($request->url(), vlx_get_account_url())) return $next($request);
+        if (str_contains($request->url(), vlx_get_account_url()) || str_contains($request->url(), 'auth') ) return $next($request);
 
         return response()->view('pages.maintenance');
     }
