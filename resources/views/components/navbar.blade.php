@@ -1,5 +1,4 @@
 @php
-
     $routes = [];
     $guest_routes = [];
     $auth_routes = [];
@@ -17,63 +16,56 @@
             $auth_routes[] = $route;
         }
     }
-
 @endphp
 
-<header>
-    <nav class="container">
 
-        <div class="navbar-desktop">
-            <a class="navbar-desktop-sitename" href="{{ route('home') }}">
-                <h2>{{ vlx_get_env_string('APP_NAME') }}</h2>
-            </a>
-            <div class="navbar-desktop-items">
-                @foreach ($routes as $route)
-                    <a href="{{ route($route['name']) }}"><p>{{ $route['show_name'] }}</p></a>
+<header class="vlx-navbar">
+    <div class="vlx-navbar__container">
+
+        <a class="vlx-navbar__sitename" href="{{ route('home') }}">
+            <h2>{{ vlx_get_env_string('APP_NAME') }}</h2>
+        </a>
+
+        <nav class="vlx-navbar__menu">
+            @foreach ($routes as $route)
+                <a class="vlx-navbar__link" href="{{ route($route['name']) }}">
+                    <p class="vlx-navbar__text">{{ $route['show_name'] }}</p>
+                </a>
+            @endforeach
+            @auth
+                @foreach ($auth_routes as $route)
+                    <a class="vlx-navbar__link" href="{{ route($route['name']) }}">
+                        <p class="vlx-navbar__text">{{ $route['show_name'] }}</p>
+                    </a>
                 @endforeach
-                @auth
-                    @foreach ($auth_routes as $route)
-                        <a href="{{ route($route['name']) }}"><p>{{ $route['show_name'] }}</p></a>
-                    @endforeach
-                @endauth
-                @guest
-                    @foreach ($guest_routes as $route)
-                        <a href="{{ route($route['name']) }}"><p>{{ $route['show_name'] }}</p></a>
-                    @endforeach
-                @endguest
-            </div>
+            @endauth
+            @guest
+                @foreach ($guest_routes as $route)
+                    <a class="vlx-navbar__link" href="{{ route($route['name']) }}">
+                        <p class="vlx-navbar__text">{{ $route['show_name'] }}</p>
+                    </a>
+                @endforeach
+            @endguest
+        </nav>
+
+        <div class="vlx-navbar__toggle">
+            <i class="vlx-icon vlx-icon--bars"></i>
         </div>
 
-        <div class="navbar-mobile">
-            <a class="navbar-mobile-sitename" href="{{ route('home') }}">
-                <h2>{{ vlx_get_env_string('APP_NAME') }}</h2>
-            </a>
-            <div class="navbar-mobile-items">
-                <div class="open-nav" onclick="openNav()"><i class="da-icon da-icon--bars da-icon--large"></i></div>
-            </div>
-            <div id="navbar-mobile-fullscreen" class="nav-overlay">
-                <p href="javascript:void(0)" class="closebtn" onclick="closeNav()"><i class="da-icon da-icon--xmark da-icon--xxx-large"></i></p>
-                <div class="nav-overlay-content">
-                    @foreach ($routes as $route)
-                        <a href="{{ route($route['name']) }}"><p>{{ $route['show_name'] }}</p></a>
-                    @endforeach
-                    @auth
-                        @foreach ($auth_routes as $route)
-                            <a href="{{ route($route['name']) }}"><p>{{ $route['show_name'] }}</p></a>
-                        @endforeach
-                    @endauth
-                    @guest
-                        @foreach ($guest_routes as $route)
-                            <a href="{{ route($route['name']) }}"><p>{{ $route['show_name'] }}</p></a>
-                        @endforeach
-                    @endguest
-                </div>
-            </div>
-        </div>
-
-        <script>
-            function openNav() { document.getElementById("navbar-mobile-fullscreen").style.height = "100%"; }
-            function closeNav() { document.getElementById("navbar-mobile-fullscreen").style.height = "0%"; }
-        </script>
-    </nav>
+    </div>
 </header>
+
+<script>
+    function toggleNav() {
+        document.querySelector(".vlx-navbar__menu").classList.toggle("vlx-navbar__menu--open");
+    }
+
+    document.querySelector(".vlx-navbar__toggle").addEventListener("click", toggleNav);
+
+    // Close the nav menu when the user clicks outside of it
+    document.addEventListener("click", function(event) {
+        if (!event.target.closest(".vlx-navbar__container")) {
+            document.querySelector(".vlx-navbar__menu").classList.remove("vlx-navbar__menu--open");
+        }
+    });
+</script>
