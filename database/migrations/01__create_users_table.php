@@ -21,7 +21,6 @@ return new class extends Migration
             $table->boolean("blocked")->default(false)->nullable();
             $table->boolean("verified")->default(false)->nullable();
             $table->boolean("admin")->default(false)->nullable();
-            $table->string('friend_ids')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

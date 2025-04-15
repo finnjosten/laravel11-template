@@ -14,15 +14,15 @@ class ContactController extends Controller
     }
 
     public function view(Contact $contact) {
-        return view('pages.account.contact-edit', ['mode' => 'view', 'contact' => $contact]);
+        return view('pages.account.contact.manage', ['mode' => 'view', 'contact' => $contact]);
     }
 
     public function trash(Contact $contact) {
-        return view('pages.account.contact-edit', ['mode' => 'delete', 'contact' => $contact]);
+        return view('pages.account.contact.manage', ['mode' => 'delete', 'contact' => $contact]);
     }
 
 
-    public function add(Request $request) {
+    public function store(Request $request) {
 
         // Validate the request
         try {

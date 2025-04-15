@@ -1,35 +1,28 @@
-<form enctype="multipart/form-data" method="POST" class="form" action="{{ route('dashboard.user.update', $user->id) }}">
+<form method="POST" class="vlx-form" action="{{ route('dashboard.user.update', $user->id) }}">
     @csrf
 
-    <div class="form__box">
-        <div class="col">
-            <h3>Name</h3>
-            <input required name="name" value="<?= $user->name ?>">
-        </div>
-        <div class="col">
-            <h3>Email</h3>
-            <input required name="email" readonly value="<?= $user->email ?>">
-        </div>
-    </div>
-    <div class="form__box">
-        <div class="col">
-            <h3>Admin</h3>
-            <input name="admin"type="checkbox" {{ $user->isAdmin() ? 'checked' : '' }}>
-                </div>
-        <div class="col">
-            <h3>Blocked</h3>
-            <input name="blocked" type="checkbox" {{ $user->isBlocked() ? 'checked' : '' }}>
-        </div>
-    </div>
-    <div class="form__box">
-        <div class="col">
-            <h3>Verified</h3>
-            <input name="verified" type="checkbox" {{ $user->isVerified() ? 'checked' : '' }}>
-        </div>
-    </div>
-    <div class="form__box">
-        <input type="submit" name="edit" class="btn btn--primary btn--small" value="Save">
+    <div class="vlx-form__box vlx-form__box">
+        <x-forms.input label="UUID" name="uuid" type="text" value="{{ $user->uuid }}" attrs="required readonly" />
     </div>
 
+    <div class="vlx-form__box vlx-form__box--hor">
+        <x-forms.input label="Name" name="name" type="text" value="{{ $user->name }}" attrs="required" />
+        <x-forms.input label="Email" name="email" type="email" value="{{ $user->email }}" attrs="required readonly" />
+    </div>
+
+    <div class="vlx-form__box vlx-form__box--hor">
+        <x-forms.switch label="Admin" sublabel="user is an admin" name="admin" checked="{{ $user->isAdmin() }}" />
+        <x-forms.switch label="Verified" sublabel="user is verified" name="verified" checked="{{ $user->isVerified() }}" />
+    </div>
+    <div class="vlx-form__box vlx-form__box--hor">
+        <x-forms.switch label="Blocked" sublabel="block user" name="blocked" checked="{{ $user->isBlocked() }}" />
+    </div>
+
+    <div class="vlx-form__box">
+        <button type="submit" name="update" class="btn btn--success btn--small">
+            <x-icon name="floppy-disk" size="small" />
+            Update
+        </button>
+    </div>
 
 </form>

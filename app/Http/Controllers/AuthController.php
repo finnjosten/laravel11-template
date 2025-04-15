@@ -7,13 +7,13 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Ramsey\Uuid\Uuid as UUID;
 
 class AuthController extends Controller
 {
 
-    public function register()
-    {
+    public function register() {
         return view('pages.auth.register');
     }
 
@@ -37,7 +37,7 @@ class AuthController extends Controller
             'name' => $validated['name'],
             'uuid' => UUID::uuid4()->toString(),
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'password' => bcrypt($validated['password']),
             'admin' => null,
             'blocked' => null,
             'verified' => null,
@@ -52,8 +52,7 @@ class AuthController extends Controller
 
 
 
-    public function login()
-    {
+    public function login() {
         return view('pages.auth.login');
     }
 
@@ -76,6 +75,17 @@ class AuthController extends Controller
         if (Auth::attempt($validated)) {
             // Redirect to the dashboard
 
+            // Check if the user is blocked
+            if (Auth::user()->blocked) {
+                Auth::logout();
+                return redirect()->back()->with('error', 'Your account is blocked')->withInput();
+            }
+            // Check if the user is verified
+            if (Auth::user()->verified == null) {
+                Auth::logout();
+                return redirect()->back()->with('error', 'Your account is not verified')->withInput();
+            }
+
             if($request->query('return')) {
                 return redirect(urldecode($request->query('return')))->with('success', 'Login successful');
                 exit();
@@ -89,10 +99,24 @@ class AuthController extends Controller
     }
 
 
-    public function logout()
-    {
+    public function logout() {
         // Log the user out
-        auth()->logout();
+        Auth::logout();
         return redirect()->route('login')->with('success', 'Logout successful');
+    }
+
+
+    public function reset() {
+        return view('pages.auth.reset-pass');
+    }
+
+    public function resetPost(Request $request) {
+        $request->validate(['email' => 'required|email']);
+
+        $status = Password::sendResetLink( $request->only('email') );
+
+        dd($status);
+
+        return null/* $status === Password::ResetLinkSent ? back()->with(['status' => __($status)]) : back()->withErrors(['email' => __($status)]) */;
     }
 }

@@ -1,18 +1,13 @@
-<div class="form">
+<div class="vlx-form">
 
-    <div class="form__box">
-        <div class="col">
-            <h3>Email</h3>
-            <input required type="email" readonly value="{{ $contact->email }}">
-        </div>
-        <div class="col">
-            <h3>Subject</h3>
-            <input required readonly value="{{ $contact->subject }}">
-        </div>
+    <div class="vlx-form__box vlx-form__box--hor">
+        <x-forms.input label="Email" name="email" placeholder="Your email" type="email" value="{{ $contact->email }}" attrs="required readonly" />
+        <x-forms.input label="Subject" name="subject" placeholder="The subject" type="text" value="{{ $contact->subject }}" attrs="required readonly" />
     </div>
-    <div class="form__box">
-        <h3>Message</h3>
-        <textarea required readonly>{{ $contact->content }}</textarea>
+
+
+    <div class="vlx-form__box">
+        <x-forms.text-area label="Message" name="message" value="{{ $contact->content }}" attrs="required readonly" />
     </div>
 
 </div>

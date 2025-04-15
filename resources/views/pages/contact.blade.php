@@ -11,17 +11,12 @@
 @section('content')
 
 <main>
-    @include('components.blocks.header-subpage', ['args' => array(
-        'text' => '
-        <h1>
-            Contact
-        </h1>'
-    )])
-    <section class="block block--form">
-        <div class="container">
-            @include('components.forms.contact.create')
-        </div>
-    </section>
+    <x-blocks.header-subpage>
+        <h1>Contact</h1>
+    </x-blocks.header-subpage>
+    <x-blocks.form class="wst--medium wsb--medium" container-class="container--x-small">
+        @include('components.forms.contact.create')
+    </x-blocks.form>
 </main>
 
 @endsection

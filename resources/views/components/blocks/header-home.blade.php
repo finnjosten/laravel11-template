@@ -1,13 +1,7 @@
-@php
-    if(!$args) {
-        return;
-    }
-@endphp
-
-<section class="vlx-header vlx-header--home">
+<section class="vlx-header vlx-header--home {{ $class ?? '' }}" {{ isset($id) ? "id='$id'" : '' }}>
     <div class="container">
         <div class="vlx-text">
-            {!! $args['text'] !!}
+            {{ $slot }}
         </div>
     </div>
 </section>

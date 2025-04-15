@@ -1,22 +1,22 @@
-<form method="POST" class="form" action="{{ route('contact.add') }}">
+<form method="POST" class="vlx-form" action="{{ route("contact.add") }}">
     @csrf
 
-    <div class="form__box">
-        <div class="col">
-            <h3>Email</h3>
-            <input required type="email" name="email" placeholder="Your email">
-        </div>
-        <div class="col">
-            <h3>Subject</h3>
-            <input required name="subject" placeholder="The subject">
-        </div>
+    <div class="vlx-form__box vlx-form__box--hor">
+        <x-forms.input label="Email" name="email" placeholder="Your email" type="email" attrs="required" />
+        <x-forms.input label="Subject" name="subject" placeholder="The subject" type="text" attrs="required" />
     </div>
-    <div class="form__box">
-        <h3>Message</h3>
-        <textarea required name="content" placeholder="The subject"></textarea>
+
+
+    <div class="vlx-form__box">
+        <x-forms.text-area label="Message" name="content" placeholder="The subject" attrs="required" />
     </div>
-    <div class="form__box">
-        <input type="submit" name="add" class="btn btn--primary btn--small" value="Save">
+
+
+    <div class="vlx-form__box">
+        <button type="submit" name="update" class="btn btn--success btn--small">
+            <x-icon icon="floppy-disk" size="small" style="solid" />
+            Send
+        </button>
     </div>
 
 </form>

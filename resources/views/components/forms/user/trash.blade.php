@@ -1,7 +1,15 @@
-<form method="POST" class="form" action="{{ route('dashboard.user.delete', $user->id) }}">
+<form method="POST" class="vlx-form" action="{{ route('dashboard.user.delete', $user->id) }}">
     @csrf
 
-    <h3>Are you sure you want to delete this item?</h3>
-    <input type="submit" name="delete" class="btn btn--danger btn--small" value="Yes, delete it!">
+    <div class="vlx-form__box vlx-form__box--hor">
+        <label class="h4">Are you sure you want to delete this user?</label>
+    </div>
+
+    <div class="vlx-form__box">
+        <button type="submit" name="delete" class="btn btn--danger btn--small">
+            <x-icon name="trash" size="small" />
+            Delete
+        </button>
+    </div>
 
 </form>

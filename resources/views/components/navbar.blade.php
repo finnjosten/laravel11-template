@@ -1,21 +1,60 @@
 @php
-    $routes = [];
-    $guest_routes = [];
-    $auth_routes = [];
+$routes = [
+    "default" => [
+        [
+            "name" => "Home",
+            "link" => route('home')
+        ],
+        [
+            "name" => "About",
+            "link" => route('about')
+        ],
+        [
+            "name" => "Contact",
+            "link" => route('contact')
+        ],
+    ],
+    "guest" => [
+        [
+            "name" => "Login",
+            "link" => route('login')
+        ],
+    ],
+    "auth" => [
+        [
+            "name" => "Dashboard",
+            "link" => route('dashboard.main')
+        ]
+    ]
+];
 
-    foreach (Route::getRoutes() as $i => $item) {
-        $route['name']      = $item->getName();
-        $route['show_name'] = vlx_format_route_name($item->getName());
-        $route['namespace'] = $item->action["namespace"] ?? "";
+// If current window is in on the dashboard set other routes
+if (Str::contains(request()->url(), vlx_get_env_string('SETTING_ACCOUNT_URL'))) {
+    $routes = [
+        "default" => [
+            [
+                "name" => "Dashboard",
+                "link" => route('dashboard.main')
+            ],
+            [
+                "name" => "Profile",
+                "link" => route('profile')
+            ],
+        ],
+        "admin" => [
+            [
+                "name" => "Contact",
+                "link" => route('dashboard.contact')
+            ],
+            [
+                "name" => "Users",
+                "link" => route('dashboard.user')
+            ],
+        ]
+    ];
+}
 
-        if($route['namespace'] == 'navbar') {
-            $routes[] = $route;
-        } elseif ($route['namespace'] == 'guest_navbar') {
-            $guest_routes[] = $route;
-        } elseif ($route['namespace'] == 'auth_navbar') {
-            $auth_routes[] = $route;
-        }
-    }
+$routes = vlx_cast_to_object($routes);
 @endphp
 
 
@@ -27,25 +66,38 @@
         </a>
 
         <nav class="vlx-navbar__menu">
-            @foreach ($routes as $route)
-                <a class="vlx-navbar__link" href="{{ route($route['name']) }}">
-                    <p class="vlx-navbar__text">{{ $route['show_name'] }}</p>
-                </a>
-            @endforeach
-            @auth
-                @foreach ($auth_routes as $route)
-                    <a class="vlx-navbar__link" href="{{ route($route['name']) }}">
-                        <p class="vlx-navbar__text">{{ $route['show_name'] }}</p>
+            @if (isset($routes->default))
+                @foreach ($routes->default as $route)
+                    <a class="vlx-navbar__link" href="{{ $route->link }}">
+                        <p class="vlx-navbar__text">{{ $route->name }}</p>
                     </a>
                 @endforeach
-            @endauth
-            @guest
-                @foreach ($guest_routes as $route)
-                    <a class="vlx-navbar__link" href="{{ route($route['name']) }}">
-                        <p class="vlx-navbar__text">{{ $route['show_name'] }}</p>
+            @endif
+            @if (isset($routes->auth))
+                @auth
+                    @foreach ($routes->auth as $route)
+                        <a class="vlx-navbar__link" href="{{ $route->link }}">
+                            <p class="vlx-navbar__text">{{ $route->name }}</p>
+                        </a>
+                    @endforeach
+                @endauth
+            @endif
+            @if (isset($routes->guest))
+                @guest
+                    @foreach ($routes->guest as $route)
+                        <a class="vlx-navbar__link" href="{{ $route->link }}">
+                            <p class="vlx-navbar__text">{{ $route->name }}</p>
+                        </a>
+                    @endforeach
+                @endguest
+            @endif
+            @if (isset($routes->admin) && auth()->user() && auth()->user()->isAdmin())
+                @foreach ($routes->admin as $route)
+                    <a class="vlx-navbar__link" href="{{ $route->link }}">
+                        <p class="vlx-navbar__text">{{ $route->name }}</p>
                     </a>
                 @endforeach
-            @endguest
+            @endif
         </nav>
 
         <div class="vlx-navbar__toggle">

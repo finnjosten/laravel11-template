@@ -11,12 +11,11 @@
 @section('content')
 
 <main>
-    @include('components.blocks.header-home', ['args' => array(
-        'text' => '
+    <x-blocks.header-home>
         <h1>
-            '.env('APP_NAME').'
-        </h1>'
-    )])
+            {{ env('APP_NAME') }}
+        </h1>
+    </x-blocks.header-home>
 </main>
 
 @endsection

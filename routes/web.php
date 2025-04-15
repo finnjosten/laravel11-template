@@ -31,14 +31,11 @@ if(env('SETTING_MAINTENANCE')) {
 // Normal mode
 
 Route::view('/', 'pages.home')->name('home');
+Route::view('/about', 'pages.about-us')->name('about');
 
 // Pages for on the navbar
-Route::group(['namespace' => 'navbar'],function() {
-    Route::view('/about', 'pages.about-us')->name('about-us');
-
-    Route::view('/contact', 'pages.contact')->name('contact');
-});
-Route::post('/contact', [ContactController::class, 'add'])->name('contact.add');
+Route::view('/contact', 'pages.contact')->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.add');
 
 
 
