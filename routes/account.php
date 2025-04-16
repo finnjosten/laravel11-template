@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PageController;
 
 // Authenticated stuff (should not be turned off with normal maintenance mode only full lock down)
 Route::group(['middleware' => 'auth'], function () {
@@ -51,18 +52,33 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/users/update/{user}', [UserController::class, 'update']   )->name('dashboard.user.update');   //BE
 
             Route::get( '/users/delete/{user}', [UserController::class, 'trash']    )->name('dashboard.user.trash');    //FE
-            Route::post('/users/delete/{user}', [UserController::class, 'destroy']   )->name('dashboard.user.delete');   //BE
+            Route::post('/users/delete/{user}', [UserController::class, 'destroy']  )->name('dashboard.user.delete');   //BE
 
 
 
-            // Users
+            // Contact
             Route::view('/contact', 'pages.account.contact.index')->name('dashboard.contact');
 
-            // Users form endpoints
+            // Contact form endpoints
             Route::get( '/contact/view/{contact}',      [ContactController::class, 'view'])->name('dashboard.contact.view');      //FE
 
             Route::get( '/contact/delete/{contact}',    [ContactController::class, 'trash'])->name('dashboard.contact.trash');    //FE
             Route::post('/contact/delete/{contact}',    [ContactController::class, 'delete'])->name('dashboard.contact.delete');  //BE
+
+
+
+            // Pages
+            Route::get( '/pages',               [PageController::class, 'index'])->name('dashboard.pages');
+
+            // Pages form endpoints
+            Route::get( '/pages/create',            [PageController::class, 'create']   )->name('dashboard.pages.create');  //FE
+            Route::post('/pages/create',            [PageController::class, 'store']    )->name('dashboard.pages.store');   //BE
+
+            Route::get( '/pages/update/{page_id}',  [PageController::class, 'edit']     )->name('dashboard.pages.edit');    //FE
+            Route::post('/pages/update/{page_id}',  [PageController::class, 'update']   )->name('dashboard.pages.update');  //BE
+
+            Route::get( '/pages/delete/{page_id}',  [PageController::class, 'trash']    )->name('dashboard.pages.trash');   //FE
+            Route::post('/pages/delete/{page_id}',  [PageController::class, 'destroy']  )->name('dashboard.pages.delete');  //BE
 
         });
     });

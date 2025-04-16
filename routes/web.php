@@ -37,8 +37,8 @@ Route::view('/about', 'pages.about-us')->name('about');
 Route::view('/contact', 'pages.contact')->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.add');
 
-
-
+// Dynamic pages route - should be at the bottom to not interfere with other routes
+Route::get('/{slug}', [App\Http\Controllers\PageController::class, 'show']) ->name('page.show') ->where('slug', '^(?!dashboard|api|auth|account).*$');
 
 include __DIR__.'/auth.php';
 include __DIR__.'/account.php';

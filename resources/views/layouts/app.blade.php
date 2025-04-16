@@ -2,16 +2,8 @@
 <html lang="en">
     <head>
 
-        <?php vlx_set_social_meta() ?>
-        <?php vlx_set_page_meta() ?>
-
-        {{-- <link rel="stylesheet" href="/css/toastr.css?{{ time() }}"> --}}
-        <link rel="stylesheet" href="/css/notyf.min.css?{{ time() }}">
-        <link rel="stylesheet" href="/css/core.css?{{ time() }}">
-        <link rel="stylesheet" href="/css/account.css?{{ time() }}">
-        <link rel="stylesheet" href="/css/blocks.css?{{ time() }}">
-        <link rel="icon" type="image/x-icon" href="/favicon.ico">
-
+        @include('layouts.partials.meta')
+        @include('layouts.partials.styles')
 
         <script src="/js/app.js?v=1.0"></script>
         <script src="/js/jquery.min.js?v=3.7.1"></script>
@@ -65,7 +57,7 @@
                                 },
                             },
                             {
-                                type: 'warning',
+                                type: 'warn',
                                 background: '#2f2f2f',
                                 icon: {
                                     className: 'vlx-icon vlx-icon--square-exclamation',

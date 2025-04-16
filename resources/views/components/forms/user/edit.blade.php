@@ -20,7 +20,7 @@
 
     <div class="vlx-form__box">
         <button type="submit" name="update" class="btn btn--success btn--small">
-            <x-icon name="floppy-disk" size="small" />
+            <x-icon icon="floppy-disk" size="small" />
             Update
         </button>
     </div>

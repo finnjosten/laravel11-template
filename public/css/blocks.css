@@ -23,7 +23,7 @@
 /** Blocks > Text **/
 .vlx-block--text { }
 .vlx-block--text h2 { max-width: 80%; margin-bottom: 32px; }
-.vlx-block--text p { max-width: 80%; }
+.vlx-block--text:not(:has(.d-grid)) p { max-width: 80%; }
 .vlx-block--text .btn.btn--link { --fs: var(--fs-medium); color: var(--accent); }
 .vlx-block--text .vlx-text p { margin-bottom: 32px; }
 .vlx-block--text .vlx-text img { display: none; }
@@ -31,7 +31,7 @@
 
 /** Blocks > Text Image **/
 .vlx-block--text-image { }
-.vlx-block--text-image .container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+.vlx-block--text-image .container { display: grid; grid-template-columns: repeat(2, 1fr); }
 
 .vlx-block--text-image h2 { max-width: 80%; margin-bottom: 32px; }
 .vlx-block--text-image p { max-width: 80%; }
@@ -73,26 +73,33 @@
 .vlx-block--dash-users { --gc: 1; }
 .vlx-block--dash-users .d-grid { display: grid; grid-template-columns: repeat(var(--gc), minmax(0, 1fr)); gap: 16px; }
 
-@media (min-width: 768px) {
-    .vlx-block--dash-users { --gc: 2; }
-}
-@media (min-width: 992px) {
-    .vlx-block--dash-users { --gc: 3; }
-}
-@media (min-width: 1200px) {
-    .vlx-block--dash-users { --gc: 4; }
-}
 
 /** Blocks > Dash > Contact **/
 .vlx-block--dash-contact { --gc: 1; }
 .vlx-block--dash-contact .d-grid { display: grid; grid-template-columns: repeat(var(--gc), minmax(0, 1fr)); gap: 16px; }
 
+
+/** Blocks > Dash > Contact **/
+.vlx-block--dash-pages { --gc: 1; }
+.vlx-block--dash-pages .d-grid { display: grid; grid-template-columns: repeat(var(--gc), minmax(0, 1fr)); gap: 16px; }
+.vlx-block--dash-pages .vlx-block__header { display: flex; justify-content: space-between; align-items: center; }
+.vlx-block--dash-pages .vlx-block__header :is(.vlx-form__box, .btn-group) { margin: unset !important; }
+.vlx-block--dash-pages .vlx-block__header .btn.btn--small { min-width: 260px !important; }
+
+
+/** Blocks > Dash > @media **/
 @media (min-width: 768px) {
+    .vlx-block--dash-users { --gc: 2; }
     .vlx-block--dash-contact { --gc: 2; }
+    .vlx-block--dash-pages { --gc: 2; }
 }
 @media (min-width: 992px) {
+    .vlx-block--dash-users { --gc: 3; }
     .vlx-block--dash-contact { --gc: 3; }
+    .vlx-block--dash-pages { --gc: 3; }
 }
 @media (min-width: 1200px) {
+    .vlx-block--dash-users { --gc: 4; }
     .vlx-block--dash-contact { --gc: 4; }
+    .vlx-block--dash-pages { --gc: 4; }
 }

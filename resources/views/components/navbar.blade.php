@@ -43,6 +43,10 @@ if (Str::contains(request()->url(), vlx_get_env_string('SETTING_ACCOUNT_URL'))) 
         ],
         "admin" => [
             [
+                "name" => "Pages",
+                "link" => route('dashboard.pages')
+],
+            [
                 "name" => "Contact",
                 "link" => route('dashboard.contact')
             ],
