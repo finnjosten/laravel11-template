@@ -120,7 +120,7 @@
     position: relative;
     padding: 0 16px;
     border-radius: var(--border-radius);
-    max-width: 300px;
+    max-width: 600px;
     width: fit-content;
     transform: translateY(25%);
     box-sizing: border-box;

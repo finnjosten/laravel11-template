@@ -1,8 +1,8 @@
-<form method="POST" class="vlx-form" action="{{ route('profile.destroy', auth()->user()->id) }}">
+<form method="POST" class="vlx-form" action="{{ route('dashboard.pages.delete', $page->id) }}">
     @csrf
 
     <div class="vlx-form__box vlx-form__box--hor">
-        <label class="h4">Are you sure you want to delete your account?</label>
+        <label class="h4">Are you sure you want to delete this page?</label>
     </div>
 
     <div class="vlx-form__box">

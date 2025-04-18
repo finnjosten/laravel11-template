@@ -79,7 +79,7 @@
 .vlx-block--dash-contact .d-grid { display: grid; grid-template-columns: repeat(var(--gc), minmax(0, 1fr)); gap: 16px; }
 
 
-/** Blocks > Dash > Contact **/
+/** Blocks > Dash > Pages **/
 .vlx-block--dash-pages { --gc: 1; }
 .vlx-block--dash-pages .d-grid { display: grid; grid-template-columns: repeat(var(--gc), minmax(0, 1fr)); gap: 16px; }
 .vlx-block--dash-pages .vlx-block__header { display: flex; justify-content: space-between; align-items: center; }
@@ -87,19 +87,30 @@
 .vlx-block--dash-pages .vlx-block__header .btn.btn--small { min-width: 260px !important; }
 
 
+/** Blocks > Dash > Menus **/
+.vlx-block--dash-menus { --gc: 1; }
+.vlx-block--dash-menus .d-grid { display: grid; grid-template-columns: repeat(var(--gc), minmax(0, 1fr)); gap: 16px; }
+.vlx-block--dash-menus .vlx-block__header { display: flex; justify-content: space-between; align-items: center; }
+.vlx-block--dash-menus .vlx-block__header :is(.vlx-form__box, .btn-group) { margin: unset !important; }
+.vlx-block--dash-menus .vlx-block__header .btn.btn--small { min-width: 260px !important; }
+
+
 /** Blocks > Dash > @media **/
 @media (min-width: 768px) {
     .vlx-block--dash-users { --gc: 2; }
     .vlx-block--dash-contact { --gc: 2; }
     .vlx-block--dash-pages { --gc: 2; }
+    .vlx-block--dash-menus { --gc: 2; }
 }
 @media (min-width: 992px) {
     .vlx-block--dash-users { --gc: 3; }
     .vlx-block--dash-contact { --gc: 3; }
     .vlx-block--dash-pages { --gc: 3; }
+    .vlx-block--dash-menus { --gc: 3; }
 }
 @media (min-width: 1200px) {
     .vlx-block--dash-users { --gc: 4; }
     .vlx-block--dash-contact { --gc: 4; }
     .vlx-block--dash-pages { --gc: 4; }
+    .vlx-block--dash-menus { --gc: 4; }
 }

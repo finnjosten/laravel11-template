@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Page;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Str;
 
 class PageController extends Controller
@@ -12,8 +13,18 @@ class PageController extends Controller
         return view('pages.account.pages.index', ['pages' => Page::all()]);
     }
 
-    public function show($slug) {
-        $page = Page::where('slug', $slug)->first();
+    public function show($slug = null) {
+        // Since {none} is a place holder for the home page, we need to stop if that is called as its not an real page
+        if ($slug == "{none}") abort(404);
+
+        // If the slug is empty asume its the home page so find the page with slug {none}
+        if ($slug == null) {
+            // Check if the slug is empty
+            $page = Page::where('slug', "{none}")->first();
+        } else {
+            // Check if the slug is a valid page
+            $page = Page::where('slug', $slug)->first();
+        }
         $preview = false;
 
         if (!$page) abort(404);
@@ -27,10 +38,8 @@ class PageController extends Controller
 
         if ($preview) {
             session()->flash('warning', "This is a private page");
-            return view('pages.dynamic', ['page' => $page]);
-        } else {
-            return view('pages.dynamic', ['page' => $page]);
         }
+        return view('pages.dynamic', ['page' => $page]);
     }
 
     public function create() {
@@ -41,7 +50,7 @@ class PageController extends Controller
         try {
             $validated = $request->validate([
                 'title' => 'required',
-                'slug' => 'required',
+                'slug' => 'nullable',
                 'content' => 'required|json',
                 'status' => 'required|in:draft,published,private',
                 'parent_id' => 'nullable|exists:pages,id',
@@ -55,6 +64,10 @@ class PageController extends Controller
 
         $slug = $validated['slug'];
         $parent_id = $validated['parent_id'];
+
+        if ($slug == "") {
+            $slug = Str::slug($validated['title']);
+        }
 
         if (str_contains($slug, '/')) {
             $slug = Str::afterLast($slug, '/');
@@ -70,6 +83,15 @@ class PageController extends Controller
         $existingPage = Page::where('slug', $slug)->first();
         if ($existingPage) {
             return redirect()->back()->with('error', 'Slug is already taken.')->withInput();
+        }
+
+        // Check if there is already a route with this slug
+        $router = app('router');
+        $routes = $router->getRoutes();
+        $routeExists = $routes->match(request()->create('/' . $slug));
+
+        if ($routeExists && !$routeExists->isFallback) {
+            return redirect()->back()->with('error', 'Slug can\'t be used.')->withInput();
         }
 
         $page = Page::create($validated);
@@ -92,7 +114,7 @@ class PageController extends Controller
         try {
             $validated = $request->validate([
                 'title' => 'required',
-                'slug' => 'required',
+                'slug' => 'nullable',
                 'content' => 'required|json',
                 'status' => 'required|in:draft,published,private',
                 'parent_id' => 'nullable|exists:pages,id',
@@ -106,6 +128,10 @@ class PageController extends Controller
 
         $slug = $validated['slug'];
         $parent_id = $validated['parent_id'];
+
+        if ($slug == "") {
+            $slug = Str::slug($validated['title']);
+        }
 
         if (str_contains($slug, '/')) {
             $slug = Str::afterLast($slug, '/');
@@ -123,6 +149,15 @@ class PageController extends Controller
             ->first();
         if ($existingPage) {
             return redirect()->back()->with('error', 'Slug is already taken.')->withInput();
+        }
+
+        // Check if there is already a route with this slug
+        $router = app('router');
+        $routes = $router->getRoutes();
+        $routeExists = $routes->match(request()->create('/' . $slug));
+
+        if ($routeExists && !$routeExists->isFallback) {
+            return redirect()->back()->with('error', 'Slug can\'t be used.')->withInput();
         }
 
 

@@ -214,6 +214,22 @@ use Illuminate\Support\Facades\Crypt;
         }
     }
 
+    /**
+     * Replace placeholders in a string
+     */
+    if (! function_exists('vlx_replace_placeholders')) {
+        function vlx_replace_placeholders($string) {
+
+            if (str_contains($string, '%APP_NAME%')) $string = str_replace('%APP_NAME%', env('APP_NAME'), $string);
+            if (str_contains($string, '%APP_URL%')) $string = str_replace('%APP_URL%', env('APP_URL'), $string);
+            if (str_contains($string, '%APP_DESCRIPTION%')) $string = str_replace('%APP_DESCRIPTION%', env('APP_DESCRIPTION'), $string);
+            if (str_contains($string, '%APP_DOMAIN%')) $string = str_replace('%APP_DOMAIN%', vlx_get_app_domain(), $string);
+
+
+            return $string;
+        }
+    }
+
 
 
 

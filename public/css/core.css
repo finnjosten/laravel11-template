@@ -629,3 +629,9 @@ footer .block-2 a img { width: 40px; height: 40px; }
 .vlx-card--pages { border: 1px solid var(--bg-clr-light); background: var(--bg-clr-light); }
 .vlx-card--pages .vlx-card__header { padding-bottom: unset; }
 
+
+
+/** Cards > Dash > Menus **/
+.vlx-card--menus { border: 1px solid var(--bg-clr-light); background: var(--bg-clr-light); }
+.vlx-card--menus .vlx-card__header { padding-bottom: unset; }
+

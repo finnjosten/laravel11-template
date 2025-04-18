@@ -12,12 +12,22 @@ function initAutoUpdater(){
 
     updating_inputs.forEach(input => {
         let updating_input_from = document.getElementById(input.getAttribute('data-auto-update'));
+        console.log(input);
+        console.log(updating_input_from);
+
         let prefix = input.getAttribute('data-auto-update-prefix') ?? "";
         let suffix = input.getAttribute('data-auto-update-suffix') ?? "";
 
+        let parse = input.getAttribute('data-auto-update-parse');
+
+        if (updating_input_from.value != null && updating_input_from.value != "") {
+            return console.warn('Auto update input already has a value, skipping');
+        }
+
         if (updating_input_from) {
-            updating_input_from.addEventListener('input', () => {
-                input.value = prefix + updating_input_from.value + suffix;
+            input.addEventListener('input', () => {
+                let value = parseValue(input.value, parse);
+                updating_input_from.value = prefix + value + suffix;
             });
         } else {
             // Get the nearest parent form and in that form find the input with the name
@@ -26,12 +36,33 @@ function initAutoUpdater(){
             let updating_input_from = form.querySelector(`input[name="${input_name}"]`);
 
             if (updating_input_from) {
-                updating_input_from.addEventListener('input', () => {
-                    input.value = prefix + updating_input_from.value + suffix;
+                input.addEventListener('input', () => {
+                    let value = parseValue(input.value, parse);
+                    updating_input_from.value = prefix + value + suffix;
                 });
             }
         }
     });
+
+    function parseValue(value = null, method = null) {
+        if (!value) return value;
+        if (!method) return value;
+
+        if (method === 'json') {
+            try { value = JSON.parse(value); } catch (e) {  return console.error('Invalid JSON:', value); }
+        } else if (method === 'base64') {
+            try { value = atob(value); } catch (e) {  return console.error('Invalid base64:', value); }
+        } else if (method === 'urlencode') {
+            try { value = decodeURIComponent(value); } catch (e) {  return console.error('Invalid URL:', value); }
+        } else if (method === 'slugify') {
+            value = value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        } else {
+            console.error('Unknown parse method:', method);
+            return value;
+        }
+
+        return value;
+    }
 }
 
 function initSearchInputs() {

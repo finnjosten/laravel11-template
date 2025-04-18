@@ -18,28 +18,11 @@
     $text       = $settings->text ?? '';
     $image->url = $settings->imageUrl ?? '';
     $image->alt = $settings->imageAlt ?? '';
-    /*
-    {#1099 ▼ // resources/views/components/blocks/dynamic/text-image.blade.php
-    +"id": "block-1744798756891"
-    +"type": "textImage"
-    +"template": "text-image"
-    +"settings": {#1315 ▼
-        +"wst": "large"
-        +"wsb": "large"
-        +"bg": "normal"
-        +"text": "<h2>Lorem Ipsum</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>""
-    "
-        +"imageUrl": "https://laravel.vacso.cloud/images/example-1.jpg"
-        +"imageAlt": ""
-        +"buttons": []
-    }
-    }
-  */
 @endphp
 <section class="{{ $block_classes }}" {{ $id ? "id='$id'" : '' }}>
     <div class="{{ $container_classes }}">
         <div class="vlx-text">
-            {!! $text !!}
+            {!! vlx_replace_placeholders($text) !!}
         </div>
         <div class="vlx-image">
             @if (isset($image))

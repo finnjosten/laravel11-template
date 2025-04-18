@@ -7,15 +7,9 @@
 
         <script src="/js/app.js?v=1.0"></script>
         <script src="/js/jquery.min.js?v=3.7.1"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
-        {{-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-YBKBS0EKY7"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-YBKBS0EKY7');
-        </script> --}}
-
+        @stack('styles')
         @yield('head')
 
     </head>
@@ -104,6 +98,8 @@
                 @endif
             </script>
         </div>
+
+        @stack('scripts')
 
     </body>
 </html>

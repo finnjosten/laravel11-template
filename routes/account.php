@@ -8,6 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\MenuController;
 
 // Authenticated stuff (should not be turned off with normal maintenance mode only full lock down)
 Route::group(['middleware' => 'auth'], function () {
@@ -68,7 +69,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
             // Pages
-            Route::get( '/pages',               [PageController::class, 'index'])->name('dashboard.pages');
+            Route::get( '/pages',                   [PageController::class, 'index'])->name('dashboard.pages');
 
             // Pages form endpoints
             Route::get( '/pages/create',            [PageController::class, 'create']   )->name('dashboard.pages.create');  //FE
@@ -79,6 +80,21 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::get( '/pages/delete/{page_id}',  [PageController::class, 'trash']    )->name('dashboard.pages.trash');   //FE
             Route::post('/pages/delete/{page_id}',  [PageController::class, 'destroy']  )->name('dashboard.pages.delete');  //BE
+
+
+
+            // Menus
+            Route::get( '/menus',               [MenuController::class, 'index']    )->name('dashboard.menus');
+
+            // Menus form endpoints
+            Route::get( '/menus/create',        [MenuController::class, 'create']   )->name('dashboard.menus.create');  //FE
+            Route::post('/menus/create',        [MenuController::class, 'store']    )->name('dashboard.menus.store');   //BE
+
+            Route::get( '/menus/update/{menu}', [MenuController::class, 'edit']     )->name('dashboard.menus.edit');    //FE
+            Route::post('/menus/update/{menu}', [MenuController::class, 'update']   )->name('dashboard.menus.update');  //BE
+
+            Route::get( '/menus/delete/{menu}', [MenuController::class, 'trash']    )->name('dashboard.menus.trash');   //FE
+            Route::post('/menus/delete/{menu}', [MenuController::class, 'destroy']  )->name('dashboard.menus.delete');  //BE
 
         });
     });

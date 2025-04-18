@@ -28,10 +28,10 @@
     @endif
     <div class="{{ $container_classes }}">
         <div class="vlx-text">
-            {!! $text1 !!}
+            {!! vlx_replace_placeholders($text1) !!}
         </div>
         <div class="vlx-text">
-            {!! $text2 !!}
+            {!! vlx_replace_placeholders($text2) !!}
         </div>
     </div>
 </section>

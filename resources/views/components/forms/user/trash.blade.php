@@ -7,7 +7,7 @@
 
     <div class="vlx-form__box">
         <button type="submit" name="delete" class="btn btn--danger btn--small">
-            <x-icon name="trash" size="small" />
+            <x-icon icon="trash" size="small" />
             Delete
         </button>
     </div>

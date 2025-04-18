@@ -9,11 +9,11 @@
         <h3 class="js-searchable">{{ $page->title }}</h3>
     </div>
     <div class="vlx-card__body">
-        <p><strong>Created at:</strong> {{ $page->created_at->format('d-m-Y') }}</p>
-        <p><strong>Last updated:</strong> {{ $page->updated_at->format('d-m-Y') }}</p>
         <p><strong>Slug:</strong> <span class="js-searchable">{{ $page->slug }}</span></p>
         <p><strong>Status:</strong> {{ $page->status }}</p>
         <p><strong>Parent:</strong> {{ $parent ? $parent->title : "None" }}</p>
+        <p><strong>Created at:</strong> {{ $page->created_at->format('d-m-Y') }}</p>
+        <p><strong>Last updated:</strong> {{ $page->updated_at->format('d-m-Y') }}</p>
 
     </div>
     <div class="vlx-card__footer">

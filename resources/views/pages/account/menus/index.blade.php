@@ -5,10 +5,7 @@
 <!-- Page head -->
 @section('head')
 
-<title>Pages || {{ env('APP_NAME') }}</title>
-
-<link rel="stylesheet" href="/css/datatables.css?v=1.13.7" />
-<script src="/js/datatables.js?v=1.13.7"></script>
+<title>Menus || {{ env('APP_NAME') }}</title>
 
 @endsection
 
@@ -16,15 +13,15 @@
 @section('content')
 
 @php
-    $pages = App\Models\Page::all();
+    $menus = App\Models\Menu::all();
 @endphp
 
-<main class="dash pages">
+<main class="dash users">
     @include('components.account.sidebar', ['page' => 'pages'])
 
-    <section class="vlx-block vlx-block--dash-pages wst--large wsb--medium bg--normal">
+    <section class="vlx-block vlx-block--dash-menus wst--large wsb--medium bg--normal">
         <div class="container">
-            @if (!empty($pages))
+            @if (!empty($menus))
 
                 <div class="vlx-block__header">
                     <div class="vlx-form">
@@ -36,21 +33,21 @@
                                 </span>
                             </div>
                             <div class="vlx-input-group">
-                                <p class="js-search-count">{{ count($pages) }} @if (count($pages) > 1) results @else result @endif</p>
+                                <p class="js-search-count">{{ count($menus) }} @if (count($menus) > 1) results @else result @endif</p>
                             </div>
                         </div>
                     </div>
                     <div class="btn-group btn-group--right">
-                        <a href="{{ route('dashboard.pages.create') }}" class="btn btn--primary btn--small">
+                        <a href="{{ route('dashboard.menus.create') }}" class="btn btn--primary btn--small">
                             <x-icon icon="plus" size="small" />
-                            Add page
+                            Add menu
                         </a>
                     </div>
                 </div>
 
                 <div class="inner d-grid js-search-items">
-                    @foreach ($pages as $page)
-                        <x-cards.pages :page="$page" />
+                    @foreach ($menus as $menu)
+                        <x-cards.menus :menu="$menu" />
                     @endforeach
                 </div>
 
