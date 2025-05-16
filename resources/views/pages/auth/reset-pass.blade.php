@@ -23,16 +23,7 @@
     <section class="vlx-block vlx-block--auth">
         <div class="vlx-container d-flex">
 
-            <form
-                method="post"
-                class="vlx-card vlx-card--auth vlx-card--reset-pass"
-
-                @if (!empty(request()->query('return')))
-                    action="{{ route('reset.post', ["return" => request()->query('return')]) }}"
-                @else
-                    action="{{ route('reset.post') }}"
-                @endif
-            >
+            <form method="post" class="vlx-card vlx-card--auth vlx-card--reset-pass" action="{{ route('reset.post') }}">
                 <div class="vlx-card__header">
                     <img src="{{ env('APP_LOGO') }}" alt="{{ env('APP_NAME') }}" class="logo">
                 </div>

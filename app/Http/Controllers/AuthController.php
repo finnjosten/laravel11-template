@@ -86,10 +86,6 @@ class AuthController extends Controller
                 return redirect()->back()->with('error', 'Your account is not verified')->withInput();
             }
 
-            if($request->query('return')) {
-                return redirect(urldecode($request->query('return')))->with('success', 'Login successful');
-                exit();
-            }
             return redirect()->route('dashboard.main')->with('success', 'Login successful');
             exit();
         }

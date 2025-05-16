@@ -22,16 +22,7 @@
     <section class="vlx-block vlx-block--auth">
         <div class="vlx-container d-flex">
 
-            <form
-                method="post"
-                class="vlx-card vlx-card--auth vlx-card--login"
-
-                @if (!empty(request()->query('return')))
-                    action="{{ route('login.post', ["return" => request()->query('return')]) }}"
-                @else
-                    action="{{ route('login.post') }}"
-                @endif
-            >
+            <form method="post" class="vlx-card vlx-card--auth vlx-card--login" action="{{ route('login.post') }}">
                 <div class="vlx-card__header">
                     <img src="{{ env('APP_LOGO') }}" alt="{{ env('APP_NAME') }}" class="logo">
                 </div>
