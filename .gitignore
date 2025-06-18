@@ -18,3 +18,9 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+*.min.css
+*.min.js
+
+!trumbowyg.min.css
+!jquery.min.js
