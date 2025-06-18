@@ -7,9 +7,6 @@
 
 <title>Profile || {{ env('APP_NAME') }}</title>
 
-<link rel="stylesheet" href="/css/datatables.css?v=1.13.7" />
-<script src="/js/datatables.js?v=1.13.7"></script>
-
 @endsection
 
 <!-- Page content -->

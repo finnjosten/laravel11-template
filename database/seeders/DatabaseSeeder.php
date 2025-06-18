@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid as UUID;
@@ -35,9 +36,13 @@ class DatabaseSeeder extends Seeder
             ));
         }
 
-        \App\Models\User::factory(3)->create([
-            'password' => Hash::make('password'),
-        ]);
+
+        // Seed default users
+        $users = unserialize(env('USER_DATA', 'a:0:{}'));
+
+        foreach ($users as $user) {
+            User::factory()->create($user);
+        }
 
     }
 }

@@ -10,8 +10,21 @@
 <link rel="stylesheet" href="/css/block-editor.css?{{ time() }}">
 <script src="/js/block-editor.js?{{ time() }}"></script>
 
+{{-- <link rel="stylesheet" href="/css/block-editor.min.css?{{ time() }}">
+<script src="/js/block-editor.min.js?{{ time() }}"></script> --}}
+
 <link rel="stylesheet" href="/js/wysiwyg/ui/trumbowyg.min.css">
 <script src="/js/wysiwyg/trumbowyg.min.js"></script>
+
+@php
+    $jsonBlockTypes = trim(file_get_contents(storage_path('app/blocks/blocks.json')));
+    $jsonBlockSettings = trim(file_get_contents(storage_path('app/blocks/settings.json')));
+@endphp
+
+<script>
+    const defaultSettings = JSON.parse('{!! $jsonBlockSettings !!}');
+    const blockTypes = JSON.parse('{!! $jsonBlockTypes !!}');
+</script>
 
 @endsection
 

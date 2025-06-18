@@ -4,57 +4,112 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Contact;
-use COM;
+use Illuminate\Support\Facades\Validator;
 
-class ContactController extends Controller
-{
+class ContactController extends Controller {
+
+    /** Data functions **/
+
+    public function index() {
+        $contacts = Contact::all();
+
+        if (API_RESPONSE) {
+            return response()->json([
+                'status' => 'success',
+                'data' => $contacts
+            ]);
+        }
+        return view('pages.account.contact.index');
+    }
+
+    public function show($id) {
+        $contact = Contact::find($id);
+        if (!$contact) {
+            if (API_RESPONSE) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Contact message not found'
+                ], 404);
+            }
+            return redirect()->route('dashboard.contact')->with('error', 'Contact message not found');
+        }
+
+        if (API_RESPONSE) {
+            return response()->json([
+                'status' => 'success',
+                'data' => $contact
+            ]);
+        }
+        return view('pages.account.contact.manage', ['mode' => 'view', 'contact' => $contact]);
+    }
+
+
+
+    public function view($id) {
+        $contact = Contact::findOrFail($id);
+        return view('pages.account.contact.manage', ['mode' => 'view', 'contact' => $contact]);
+    }
+
+
 
     public function create() {
         return view('pages.contact');
     }
 
-    public function view(Contact $contact) {
-        return view('pages.account.contact.manage', ['mode' => 'view', 'contact' => $contact]);
-    }
-
-    public function trash(Contact $contact) {
-        return view('pages.account.contact.manage', ['mode' => 'delete', 'contact' => $contact]);
-    }
-
-
     public function store(Request $request) {
+        $data = $request->only('email', 'subject', 'content');
 
-        // Validate the request
-        try {
-            $validated = $request->validate([
-                'email' => 'required',
-                'subject' => 'required',
-                'content' => 'required',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()->with('error', 'A field did not meet the requirements')->withInput();
-        }
-
-        // Clear any previous errors
-        $request->session()->forget(['errors', 'success', 'info', 'warning']);
+        $this->validate($data, [
+            'email' => 'required',
+            'subject' => 'required',
+            'content' => 'required',
+        ]);
 
         // Create the contact message
         $contact = Contact::create([
-            'email' => $validated['email'],
-            'subject' => $validated['subject'],
-            'content' => $validated['content'],
+            'email' => $data['email'],
+            'subject' => $data['subject'],
+            'content' => $data['content'],
         ]);
 
+        if (API_RESPONSE) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Message has been sent',
+                'data' => $contact
+            ]);
+        }
         return redirect()->route('home')->with('success', 'Message has been sent');
-
     }
 
-    public function delete(Contact $contact) {
+
+
+    public function trash($id) {
+        $contact = Contact::findOrFail($id);
+        return view('pages.account.contact.manage', ['mode' => 'delete', 'contact' => $contact]);
+    }
+
+    public function destroy($id) {
+        $contact = Contact::find($id);
+        if (!$contact) {
+            if (API_RESPONSE) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Contact message not found'
+                ], 404);
+            }
+            return redirect()->route('dashboard.contact')->with('error', 'Contact message not found');
+        }
 
         $contact->delete();
 
+        if (API_RESPONSE) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Message has been deleted'
+            ]);
+        }
         return redirect()->route('dashboard.contact')->with('success', 'Message has been deleted');
-
     }
 
 }

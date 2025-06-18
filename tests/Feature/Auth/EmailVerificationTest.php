@@ -31,6 +31,7 @@ class EmailVerificationTest extends TestCase
         $verificationUrl = URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(60),
+            // deepcode ignore InsecureHash/test: not hashing a password just an email
             ['id' => $user->id, 'hash' => sha1($user->email)]
         );
 
@@ -48,6 +49,7 @@ class EmailVerificationTest extends TestCase
         $verificationUrl = URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(60),
+            // deepcode ignore InsecureHash/test: not hashing a password just an email
             ['id' => $user->id, 'hash' => sha1('wrong-email')]
         );
 

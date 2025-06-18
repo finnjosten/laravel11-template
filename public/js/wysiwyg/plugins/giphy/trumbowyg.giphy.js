@@ -100,6 +100,7 @@
 
             $giphyModal.empty();
         }
+        // deepcode ignore DOMXSS: used in secure admin area
         $giphyModal.append(html);
 
         // Remove gray overlay on image load

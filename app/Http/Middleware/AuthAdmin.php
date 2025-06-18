@@ -16,6 +16,9 @@ class AuthAdmin
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->user()->isAdmin()) return $next($request);
+        if (API_RESPONSE) {
+            return response()->json([ 'status' => 'error', 'message' => 'Unauthorized' ], 403);
+        }
         return abort(403);
     }
 }

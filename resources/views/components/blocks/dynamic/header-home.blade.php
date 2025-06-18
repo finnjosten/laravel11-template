@@ -3,7 +3,7 @@
     $settings = $block->settings;
     $id = $block->id ?? null;
 
-    $block_classes = "vlx-header vlx-header--subpage";
+    $block_classes = "vlx-header vlx-header--home";
 
     $text = $settings->text ?? '';
 @endphp

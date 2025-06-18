@@ -8,45 +8,41 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Uuid as UUID;
 
-class AuthController extends Controller
-{
+class AuthController extends Controller {
+
+    /** Data functions **/
 
     public function register() {
         return view('pages.auth.register');
     }
 
     public function registerPost(Request $request) {
+        $data = $request->only('name', 'email', 'password');
 
-        // Validate the request
-        try {
-            $validated = $request->validate([
-                'name' => 'required',
-                'email' => 'required|email|unique:users',
-                'password' => 'required',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()->with('error', 'A field did not meet the requirements')->withInput();
-        }
+        $this->validate($data, [
+            'name' => 'required|unique:users,name',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+        ]);
 
-        // Clear any previous errors
-        $request->session()->forget(['errors', 'success', 'info', 'warning']);
-
-        $data = [
-            'name' => $validated['name'],
-            'uuid' => UUID::uuid4()->toString(),
-            'email' => $validated['email'],
-            'password' => bcrypt($validated['password']),
-            'admin' => null,
-            'blocked' => null,
-            'verified' => null,
-        ];
+        $data['uuid'] = UUID::uuid4()->toString();
+        $data['admin'] = null;
+        $data['blocked'] = null;
+        $data['verified'] = null;
 
         // Create the user
         $user = User::create($data);
 
         // Redirect to the login page
+        if (API_RESPONSE) {
+            return response()->json([
+                'status' => "success",
+                'message' => "Registration successful",
+            ]);
+        }
         return redirect()->route('login')->with('success', 'Registration successful');
     }
 
@@ -57,49 +53,102 @@ class AuthController extends Controller
     }
 
     public function loginPost(Request $request) {
+        $data = $request->only('email', 'password');
 
-        // Validate the request
-        try {
-            $validated = $request->validate([
-                'email' => 'required|email',
-                'password' => 'required',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()->with('error', 'A field did not meet the requirements')->withInput();
-        }
-
-        // Clear any previous errors
-        $request->session()->forget(['errors', 'success', 'info', 'warning']);
+        $this->validate($data, [
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
 
         // Attempt to authenticate the user
-        if (Auth::attempt($validated)) {
-            // Redirect to the dashboard
+        if (Auth::attempt($data)) {
 
             // Check if the user is blocked
             if (Auth::user()->blocked) {
-                Auth::logout();
+                if (API_RESPONSE) {
+                    return response()->json([
+                        'status' => "error",
+                        'message' => "User is blocked",
+                    ], 401);
+                }
                 return redirect()->back()->with('error', 'Your account is blocked')->withInput();
             }
             // Check if the user is verified
             if (Auth::user()->verified == null) {
-                Auth::logout();
+
+                if (API_RESPONSE) {
+                    return response()->json([
+                        'status' => "error",
+                        'message' => "User is not verified",
+                    ], 401);
+                }
                 return redirect()->back()->with('error', 'Your account is not verified')->withInput();
             }
 
+            if (API_RESPONSE) {
+                // Limit users to only one session at a time
+                /* if (Auth::user()->tokens()->count() > 0) {
+                    Auth::user()->tokens()->delete();
+                } */
+
+                $token = Auth::user()->createToken('authToken', ['*'], now()->addDay())->plainTextToken;
+
+                return response()->json([
+                    'success' => true,
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                ]);
+            }
+
             return redirect()->route('dashboard.main')->with('success', 'Login successful');
-            exit();
         }
 
         // Authentication failed, redirect back with error message
+        if (API_RESPONSE) {
+            return response()->json([
+                'status' => "error",
+                'message' => "Invalid credentials",
+            ], 401);
+        }
         return redirect()->back()->with('error', 'Email or password is incorrect')->withInput();
     }
 
 
+
     public function logout() {
+        if (!Auth::check()) {
+            if (API_RESPONSE) {
+                return response()->json([
+                    'status' => "error",
+                    'message' => "You are not logged in",
+                ], 401);
+            } else {
+                return redirect()->route('login')->with('error', 'You are not logged in');
+            }
+        }
+
+        // Revoke all the access tokens
+        Auth::user()->tokens()->delete();
+
+        // Logout the user
+        if (request()->hasSession()) {
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+        }
+
+        // Respond
+        if (API_RESPONSE) {
+            return response()->json([
+                'status' => "success",
+                'message' => "Logout successful",
+            ]);
+        }
+
         // Log the user out
         Auth::logout();
         return redirect()->route('login')->with('success', 'Logout successful');
     }
+
 
 
     public function reset() {
@@ -107,12 +156,18 @@ class AuthController extends Controller
     }
 
     public function resetPost(Request $request) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'This endpoint is not implemented yet.',
+        ], 501);
+
+
         $request->validate(['email' => 'required|email']);
 
         $status = Password::sendResetLink( $request->only('email') );
 
-        dd($status);
+        //dd($status);
 
-        return null/* $status === Password::ResetLinkSent ? back()->with(['status' => __($status)]) : back()->withErrors(['email' => __($status)]) */;
+        return null; //$status === Password::ResetLinkSent ? back()->with(['status' => __($status)]) : back()->withErrors(['email' => __($status)]);
     }
 }

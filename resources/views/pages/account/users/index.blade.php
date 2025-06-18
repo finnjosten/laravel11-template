@@ -7,9 +7,6 @@
 
 <title>Users || {{ env('APP_NAME') }}</title>
 
-<link rel="stylesheet" href="/css/datatables.css?v=1.13.7" />
-<script src="/js/datatables.js?v=1.13.7"></script>
-
 @endsection
 
 <!-- Page content -->
@@ -39,6 +36,12 @@
                                 <p class="js-search-count">{{ count($users) }} @if (count($users) > 1) results @else result @endif</p>
                             </div>
                         </div>
+                    </div>
+                    <div class="btn-group btn-group--right">
+                        <a href="{{ route('dashboard.user.create') }}" class="btn btn--primary btn--small">
+                            <x-icon icon="plus" size="small" />
+                            Add user
+                        </a>
                     </div>
                 </div>
 

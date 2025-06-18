@@ -11,8 +11,8 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('/forgot-password', [AuthController::class, 'resetPost'])->name('reset.post');
 
     // Setup redirects to login and register
-    Route::permanentRedirect('/register', fn() => redirect()->route('register') );
-    Route::permanentRedirect('/login', fn() => redirect()->route('login') );
+    Route::get('/register', fn() => redirect()->route('register') );
+    Route::get('/login', fn() => redirect()->route('login') );
 
     // Add a prefix
     Route::group(['prefix' => vlx_get_auth_url()], function() {
@@ -22,9 +22,7 @@ Route::group(['middleware' => 'guest'], function () {
         Route::post('/register', [AuthController::class, 'registerPost'])->name('register.post');
 
         // Login (show first in guest navbar)
-        Route::group(['namespace' => 'guest_navbar'],function() {
-            Route::get('/login', [AuthController::class, 'login'])->name('login');
-        });
+        Route::get('/login', [AuthController::class, 'login'])->name('login');
         Route::post('/login', [AuthController::class, 'loginPost'])->name('login.post');
 
     });

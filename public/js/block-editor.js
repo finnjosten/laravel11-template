@@ -1,155 +1,3 @@
-
-const defaultSettings = {
-    wst: {
-        type: 'select',
-        options: [
-            { value: 'none', label: 'None' },
-            { value: 'large', label: 'Large' },
-            { value: 'medium', label: 'Medium' },
-            { value: 'small', label: 'Small' }
-        ],
-        default: 'large',
-    },
-    wsb: {
-        type: 'select',
-        options: [
-            { value: 'none', label: 'None' },
-            { value: 'large', label: 'Large' },
-            { value: 'medium', label: 'Medium' },
-            { value: 'small', label: 'Small' }
-        ],
-        default: 'large',
-    },
-    bg: {
-        type: 'select',
-        options: [
-            { value: 'light', label: 'Light' },
-            { value: 'normal', label: 'Normal' },
-            { value: 'dark', label: 'Dark' }
-        ],
-        default: 'normal',
-    }
-}
-const blockTypes = {
-    headerHome: {
-        template: 'header-home',
-        name: 'Header Home',
-        icon: '🏠',
-        settings: {
-            text: {
-                type: 'wysiwyg',
-                default: ''
-            },
-            imageUrl: {
-                type: 'text',
-                default: ''
-            },
-            imageAlt: {
-                type: 'text',
-                default: ''
-            }
-        }
-    },
-    headerSubpage: {
-        template: 'header-subpage',
-        name: 'Header Subpage',
-        icon: '📑',
-        settings: {
-            text: {
-                type: 'wysiwyg',
-                default: ''
-            },
-            imageUrl: {
-                type: 'text',
-                default: ''
-            },
-            imageAlt: {
-                type: 'text',
-                default: ''
-            },
-        }
-    },
-    text: {
-        template: 'text',
-        name: 'Text Block',
-        icon: '📝',
-        settings: {
-            text1: {
-                type: 'wysiwyg',
-                default: ''
-            },
-            text2: {
-                type: 'wysiwyg',
-                default: ''
-            },
-            title: {
-                type: 'text',
-                default: ''
-            },
-            split: {
-                type: 'select',
-                options: [
-                    { value: '100-0', label: '100-0' },
-                    { value: '75-25', label: '75-25' },
-                    { value: '67-33', label: '67-33' },
-                    { value: '50-50', label: '50-50' },
-                    { value: '33-67', label: '33-67' },
-                    { value: '25-75', label: '25-75' },
-                    { value: '0-100', label: '0-100' },
-                ],
-                default: '50-50',
-            },
-            buttons: {
-                type: 'array',
-                default: []
-            },
-        }
-    },
-    textImage: {
-        template: 'text-image',
-        name: 'Text with Image',
-        icon: '🖼️',
-        settings: {
-            text: {
-                type: 'wysiwyg',
-                default: ''
-            },
-            imageUrl: {
-                type: 'text',
-                default: ''
-            },
-            imageAlt: {
-                type: 'text',
-                default: ''
-            },
-            buttons: {
-                type: 'array',
-                default: []
-            },
-            split: {
-                type: 'select',
-                options: [
-                    { value: '100-0', label: '100-0' },
-                    { value: '75-25', label: '75-25' },
-                    { value: '67-33', label: '67-33' },
-                    { value: '50-50', label: '50-50' },
-                    { value: '33-67', label: '33-67' },
-                    { value: '25-75', label: '25-75' },
-                    { value: '0-100', label: '0-100' },
-                ],
-                default: '50-50',
-            },
-            mediaAlign: {
-                type: 'select',
-                options: [
-                    { value: 'left', label: 'Left' },
-                    { value: 'right', label: 'Right' }
-                ],
-                default: 'left',
-            }
-        }
-    }
-};
 const blockIgnoreDefaults = ["headerHome", "headerSubpage",]
 
 
@@ -279,6 +127,7 @@ class BlockEditor {
             id: `block-${Date.now()}`,
             type,
             template: blockTypes[type].template,
+            tabs: blockTypes[type].tabs || {},
             settings: { ...this.getDefaultSettings(type) }
         };
 
@@ -327,22 +176,59 @@ class BlockEditor {
         controls.className = 'vlx-be-block-controls';
 
         // Move up button
-        const moveUpBtn = document.createElement('button');
-        moveUpBtn.innerHTML = '↑';
+        const moveUpBtn = document.createElement('div');
+        moveUpBtn.classList = 'vlx-icon--wrapper';
+        moveUpBtn.innerHTML = '<i class="vlx-icon vlx-icon--arrow-up"></i>';
         moveUpBtn.addEventListener('click', (e) => this.moveBlock(e, block, -1));
 
         // Move down button
-        const moveDownBtn = document.createElement('button');
-        moveDownBtn.innerHTML = '↓';
+        const moveDownBtn = document.createElement('div');
+        moveDownBtn.classList = 'vlx-icon--wrapper';
+        moveDownBtn.innerHTML = '<i class="vlx-icon vlx-icon--arrow-down"></i>';
         moveDownBtn.addEventListener('click', (e) => this.moveBlock(e, block, 1));
 
         // Delete button
-        const deleteBtn = document.createElement('button');
-        deleteBtn.innerHTML = '🗑️';
+        const deleteBtn = document.createElement('div');
+        deleteBtn.classList = 'vlx-icon--wrapper';
+        deleteBtn.innerHTML = '<i class="vlx-icon vlx-icon--trash"></i>';
         deleteBtn.addEventListener('click', () => this.deleteBlock(block));
 
         controls.append(moveUpBtn, moveDownBtn, deleteBtn);
         header.append(title, controls);
+
+        const tabs = document.createElement('div');
+        tabs.className = 'vlx-be-block__tabs';
+
+        Object.keys(block.tabs || {}).forEach((tabKey, index) => {
+            const isFirstTab = index == 0;
+            const tabButton = document.createElement('a');
+            tabButton.className = 'vlx-be-block__tab' + (isFirstTab ? ' --active' : '');
+            tabButton.dataset.tab = `${tabKey}__${block.id}`;
+            tabButton.innerText = block.tabs[tabKey];
+
+            tabButton.addEventListener('click', (e) => {
+                let block = e.target.closest('.vlx-be-block');
+
+                // Show the corresponding tab content
+                let allTabs = block.querySelectorAll('.vlx-be-block__tabs .vlx-be-block__tab');
+                allTabs.forEach(tab => {
+                    tab.classList.remove('--active');
+                });
+                tabButton.classList.add('--active');
+
+                let contentDivs = block.querySelectorAll('.vlx-be-block__content .vlx-be-block__tab');
+                contentDivs.forEach(contentDiv => {
+                    contentDiv.classList.remove('--active');
+                });
+
+                let activeTabContent = document.querySelector(`.vlx-be-block__content .vlx-be-block__tab[data-tab="${tabKey}__${block.id}"]`);
+                if (activeTabContent) {
+                    activeTabContent.classList.add('--active');
+                }
+            });
+
+            tabs.appendChild(tabButton);
+        });
 
         const content = document.createElement('div');
         content.className = 'vlx-be-block__content';
@@ -351,7 +237,7 @@ class BlockEditor {
         content.innerHTML = this.renderBlockSettings(block, type);
 
         // Add change event listeners to inputs
-        container.append(header, content);
+        container.append(header, tabs, content);
         document.querySelector('.js-blocks-container').appendChild(container);
 
         // Add event listeners for all inputs after they're in the DOM
@@ -360,10 +246,16 @@ class BlockEditor {
 
     renderBlockSettings(block, type) {
         let settings;
-        if (blockIgnoreDefaults.includes(type)) {
+        let tabs;
+        if (blockIgnoreDefaults.includes(block.type)) {
             settings = blockTypes[block.type].settings;
         } else {
             settings = {...blockTypes[block.type].settings, ...defaultSettings};
+        }
+
+        tabs = block.tabs || {};
+        if (Object.keys(tabs).length === 0) {
+            tabs = blockTypes[block.type].tabs;
         }
 
         settings = this.filterSettings(settings);
@@ -371,61 +263,60 @@ class BlockEditor {
         let html = [];
         let pairBuffer = [];
 
-        // Do some fun pairing. we pair 2 normal inputs with each other so they are side by side and leave the WYSIWYG and buttons to be alone in a full width box
-        Object.entries(settings).forEach(([key, setting]) => {
-            if (setting.type === 'wysiwyg') {
-                // Flush any existing pair buffer
-                if (pairBuffer.length > 0) {
-                    html.push(`<div class="vlx-form__box vlx-form__box--pair">${pairBuffer.join('')}</div>`);
-                    pairBuffer = [];
+        Object.entries(tabs).forEach(([tabkey, tab], index) => {
+            const isFirstTab = index == 0;
+            html.push(`<div class="vlx-be-block__tab ${isFirstTab ? '--active' : ''}" data-tab="${tabkey}__${block.id}">`);
+
+            // Do some fun pairing. we pair 2 normal inputs with each other so they are side by side and leave the WYSIWYG and buttons to be alone in a full width box
+            Object.entries(settings).forEach(([key, setting]) => {
+                if (!setting.tab) {
+                    setting.tab = blockTypes[block.type].settigns[key].tab || 'settings'; // Default to 'settings' tab if not specified
                 }
 
-                // Add wysiwyg as full width
-                html.push(`
-                    <div class="vlx-form__box">
+                if (setting.tab !== tabkey) return; // Only render settings for the current tab
+
+                setting.label = setting.label || this.formatSettingLabel(key);
+
+                if (setting.type === 'wysiwyg' || (setting.type === 'array' && key === 'buttons')) {
+                    // Flush any existing pair buffer
+                    if (pairBuffer.length > 0) {
+                        html.push(`<div class="vlx-form__box vlx-form__box--pair">${pairBuffer.join('')}</div>`);
+                        pairBuffer = [];
+                    }
+
+                    // Add wysiwyg as full width
+                    html.push(`
+                        <div class="vlx-form__box">
+                            <div class="vlx-input-box">
+                                <label class="h4" for="${block.id}-${key}">${setting.label}</label>
+                                ${this.renderSettingInput(block.id, key, setting, block.settings[key])}
+                            </div>
+                        </div>
+                    `);
+                } else {
+                    // Add to pair buffer
+                    pairBuffer.push(`
                         <div class="vlx-input-box">
-                            <label class="h4" for="${block.id}-${key}">${this.formatSettingLabel(key)}</label>
+                            <label class="h4" for="${block.id}-${key}">${setting.label}</label>
                             ${this.renderSettingInput(block.id, key, setting, block.settings[key])}
                         </div>
-                    </div>
-                `);
-            } else if (setting.type === 'array' && key === 'buttons') {
-                // Flush any existing pair buffer
-                if (pairBuffer.length > 0) {
-                    html.push(`<div class="vlx-form__box vlx-form__box--hor">${pairBuffer.join('')}</div>`);
-                    pairBuffer = [];
-                }
+                    `);
 
-                // Add buttons as full width
-                html.push(`
-                    <div class="vlx-form__box">
-                        <div class="vlx-input-box">
-                            <label class="h4" for="${block.id}-${key}">${this.formatSettingLabel(key)}</label>
-                            ${this.renderSettingInput(block.id, key, setting, block.settings[key])}
-                        </div>
-                    </div>
-                `);
-            } else {
-                // Add to pair buffer
-                pairBuffer.push(`
-                    <div class="vlx-input-box">
-                        <label class="h4" for="${block.id}-${key}">${this.formatSettingLabel(key)}</label>
-                        ${this.renderSettingInput(block.id, key, setting, block.settings[key])}
-                    </div>
-                `);
-
-                // If we have a pair, add it to html and clear buffer
-                if (pairBuffer.length === 2) {
-                    html.push(`<div class="vlx-form__box vlx-form__box--hor">${pairBuffer.join('')}</div>`);
-                    pairBuffer = [];
+                    // If we have a pair, add it to html and clear buffer
+                    if (pairBuffer.length === 2) {
+                        html.push(`<div class="vlx-form__box vlx-form__box--hor">${pairBuffer.join('')}</div>`);
+                        pairBuffer = [];
+                    }
                 }
+            });
+
+            // Handle any remaining unpaired items
+            if (pairBuffer.length > 0) {
+                html.push(`<div class="vlx-form__box vlx-form__box--hor">${pairBuffer.join('')}</div>`);
             }
-        });
 
-        // Handle any remaining unpaired items
-        if (pairBuffer.length > 0) {
-            html.push(`<div class="vlx-form__box vlx-form__box--hor">${pairBuffer.join('')}</div>`);
-        }
+            html.push('</div>'); // Close the tab
+        });
 
         return html.join('');
     }
@@ -443,12 +334,25 @@ class BlockEditor {
         return filteredSettings;
     }
 
+    /**
+     * Format the setting label by adding spaces before capital letters and capitalizing the first letter.
+     * @param {string} key - The setting key to format.
+     * @returns {string} - The formatted label.
+     */
     formatSettingLabel(key) {
         return key
             .replace(/([A-Z])/g, ' $1') // Add space before capital letters
             .replace(/^./, str => str.toUpperCase()); // Capitalize first letter
     }
 
+    /**
+     * Render the input for a setting based on its type.
+     * @param {string} blockId - The ID of the block.
+     * @param {string} key - The setting key.
+     * @param {object} setting - The setting object containing type and options.
+     * @param {any} value - The current value of the setting.
+     * @returns
+     */
     renderSettingInput(blockId, key, setting, value) {
         if (setting.type === 'wysiwyg') {
             return `<textarea

@@ -23,7 +23,16 @@
     <section class="vlx-block vlx-block--auth">
         <div class="vlx-container d-flex">
 
-            <form method="post" class="vlx-card vlx-card--auth vlx-card--register" action="{{ route('register.post') }}">
+            <form
+                method="post"
+                class="vlx-card vlx-card--auth vlx-card--register"
+
+                @if (!empty(request()->query('return')))
+                    action="{{ route('register.post', ["return" => request()->query('return')]) }}"
+                @else
+                    action="{{ route('register.post') }}"
+                @endif
+            >
                 <div class="vlx-card__header">
                     <img src="{{ env('APP_LOGO') }}" alt="{{ env('APP_NAME') }}" class="logo">
                 </div>

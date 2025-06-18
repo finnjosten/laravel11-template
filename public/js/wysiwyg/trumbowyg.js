@@ -270,6 +270,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 }).then((response) => {
                     response.text()
                         .then((svg) => {
+                            // deepcode ignore DOMXSS: In secure admin area
                             div.innerHTML = svg;
                         });
                 });

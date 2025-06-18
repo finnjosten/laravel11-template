@@ -9,6 +9,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\ProfileController;
 
 // Authenticated stuff (should not be turned off with normal maintenance mode only full lock down)
 Route::group(['middleware' => 'auth'], function () {
@@ -28,19 +29,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => vlx_get_account_url()], function() {
 
         // Dashboard
-        Route::group(['namespace' => 'auth_navbar'],function() {
-            Route::view('/', 'pages.account.dashboard')->name('dashboard.main');
-        });
+        Route::view('/', 'pages.account.dashboard')->name('dashboard.main');
 
         // Profile
-        Route::get( '/profile',         [UserController::class, 'profile']    )->name('profile');
+        Route::get( '/profile',         [ProfileController::class, 'show']      )->name('profile');
 
         // Users form endpoints
-        Route::get( '/profile/edit',    [UserController::class, 'editProfile']  )->name('profile.edit');    //FE
-        Route::post('/profile/edit',    [UserController::class, 'update']       )->name('profile.update');  //BE
+        Route::get( '/profile/edit',    [ProfileController::class, 'edit']      )->name('profile.edit');    //FE
+        Route::post('/profile/edit',    [ProfileController::class, 'update']    )->name('profile.update');  //BE
 
-        Route::get( '/profile/delete',  [UserController::class, 'trashProfile']     )->name('profile.trash');   //FE
-        Route::post('/profile/delete',  [UserController::class, 'destroyProfile']   )->name('profile.destroy'); //BE
+        Route::get( '/profile/delete',  [ProfileController::class, 'trash']     )->name('profile.trash');   //FE
+        Route::post('/profile/delete',  [ProfileController::class, 'destroy']   )->name('profile.destroy'); //BE
 
         // Check if user is admin
         Route::middleware(['auth-admin'])->group(function () {
@@ -49,6 +48,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::view('/users', 'pages.account.users.index')->name('dashboard.user');
 
             // Users form endpoints
+            Route::get( '/users/create',        [UserController::class, 'create']   )->name('dashboard.user.create');  //FE
+            Route::post('/users/create',        [UserController::class, 'store']    )->name('dashboard.user.store');   //BE
+
             Route::get( '/users/update/{user}', [UserController::class, 'edit']     )->name('dashboard.user.edit');     //FE
             Route::post('/users/update/{user}', [UserController::class, 'update']   )->name('dashboard.user.update');   //BE
 
@@ -69,17 +71,17 @@ Route::group(['middleware' => 'auth'], function () {
 
 
             // Pages
-            Route::get( '/pages',                   [PageController::class, 'index'])->name('dashboard.pages');
+            Route::get( '/pages',               [PageController::class, 'index'])->name('dashboard.pages');
 
             // Pages form endpoints
-            Route::get( '/pages/create',            [PageController::class, 'create']   )->name('dashboard.pages.create');  //FE
-            Route::post('/pages/create',            [PageController::class, 'store']    )->name('dashboard.pages.store');   //BE
+            Route::get( '/pages/create',        [PageController::class, 'create']   )->name('dashboard.pages.create');  //FE
+            Route::post('/pages/create',        [PageController::class, 'store']    )->name('dashboard.pages.store');   //BE
 
-            Route::get( '/pages/update/{page_id}',  [PageController::class, 'edit']     )->name('dashboard.pages.edit');    //FE
-            Route::post('/pages/update/{page_id}',  [PageController::class, 'update']   )->name('dashboard.pages.update');  //BE
+            Route::get( '/pages/update/{id}',   [PageController::class, 'edit']     )->name('dashboard.pages.edit');    //FE
+            Route::post('/pages/update/{id}',   [PageController::class, 'update']   )->name('dashboard.pages.update');  //BE
 
-            Route::get( '/pages/delete/{page_id}',  [PageController::class, 'trash']    )->name('dashboard.pages.trash');   //FE
-            Route::post('/pages/delete/{page_id}',  [PageController::class, 'destroy']  )->name('dashboard.pages.delete');  //BE
+            Route::get( '/pages/delete/{id}',   [PageController::class, 'trash']    )->name('dashboard.pages.trash');   //FE
+            Route::post('/pages/delete/{id}',   [PageController::class, 'destroy']  )->name('dashboard.pages.delete');  //BE
 
 
 
@@ -90,11 +92,11 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get( '/menus/create',        [MenuController::class, 'create']   )->name('dashboard.menus.create');  //FE
             Route::post('/menus/create',        [MenuController::class, 'store']    )->name('dashboard.menus.store');   //BE
 
-            Route::get( '/menus/update/{menu}', [MenuController::class, 'edit']     )->name('dashboard.menus.edit');    //FE
-            Route::post('/menus/update/{menu}', [MenuController::class, 'update']   )->name('dashboard.menus.update');  //BE
+            Route::get( '/menus/update/{id}',   [MenuController::class, 'edit']     )->name('dashboard.menus.edit');    //FE
+            Route::post('/menus/update/{id}',   [MenuController::class, 'update']   )->name('dashboard.menus.update');  //BE
 
-            Route::get( '/menus/delete/{menu}', [MenuController::class, 'trash']    )->name('dashboard.menus.trash');   //FE
-            Route::post('/menus/delete/{menu}', [MenuController::class, 'destroy']  )->name('dashboard.menus.delete');  //BE
+            Route::get( '/menus/delete/{id}',   [MenuController::class, 'trash']    )->name('dashboard.menus.trash');   //FE
+            Route::post('/menus/delete/{id}',   [MenuController::class, 'destroy']  )->name('dashboard.menus.delete');  //BE
 
         });
     });

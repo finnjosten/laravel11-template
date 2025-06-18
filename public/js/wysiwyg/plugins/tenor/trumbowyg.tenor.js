@@ -136,6 +136,7 @@
 
             $tenorModal.empty();
         }
+        // deepcode ignore DOMXSS: in secure admin area
         $tenorModal.append(html);
 
         if (!nextCursor || nextCursor.length === 0) {

@@ -43,7 +43,7 @@ include __DIR__.'/account.php';
 include __DIR__.'/api.php';
 
 // Dynamic pages route - catches any route that hasn't been matched by previous routes
-Route::get('/{slug}', [App\Http\Controllers\PageController::class, 'show'])
+Route::get('/{identifier?}', [App\Http\Controllers\PageController::class, 'show'])
     ->name('page.show')
     ->where('slug', '^(?!dashboard|api|auth|account).*$')
     ->fallback();

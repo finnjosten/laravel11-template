@@ -36,6 +36,8 @@
             @include('components.forms.user.edit', ['user' => $user])
         @elseif($mode == 'delete')
             @include('components.forms.user.trash', ['user' => $user])
+        @elseif($mode == 'add')
+            @include('components.forms.user.create')
         @endif
     </x-blocks.form>
 

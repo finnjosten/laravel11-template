@@ -1,34 +1,34 @@
 let nextId = 1;
 
 function addMenuItem(parentElement = null) {
-    const template = document.getElementById('menuItemTemplate').innerHTML;
+    const template = document.querySelector('.js-menu-template').innerHTML;
     const newItem = template.replaceAll('__ID__', nextId++);
 
     const container = parentElement ?
-        parentElement.querySelector('.vlx-menu-item__children') :
-        document.getElementById('menuItems');
+        parentElement.querySelector('.js-menu-item-children') :
+        document.querySelector('.js-menu-items');
 
     container.insertAdjacentHTML('beforeend', newItem);
     initializeSortable(container);
 }
 
 function toggleMenuItem(button) {
-    const item = button.closest('.vlx-menu-item');
-    const content = item.querySelector('.vlx-menu-item__content');
+    const item = button.closest('.js-menu-item');
+    const content = item.querySelector('.js-menu-item-content');
     content.style.display = content.style.display === 'none' ? 'block' : 'none';
 }
 
 function removeMenuItem(button) {
-    const item = button.closest('.vlx-menu-item');
+    const item = button.closest('.js-menu-item');
     item.remove();
 }
 
 function handleMenuItemTypeChange(select) {
-    const item = select.closest('.vlx-menu-item');
-    const link = item.querySelector('.link-input');
-    const linkInput = item.querySelector('.link-input input');
-    const page = item.querySelector('.page-select');
-    const pageInput = item.querySelector('.page-select select');
+    const item = select.closest('.js-menu-item');
+    const link = item.querySelector('.js-link-input');
+    const linkInput = item.querySelector('.js-link-input input');
+    const page = item.querySelector('.js-page-select');
+    const pageInput = item.querySelector('.js-page-select select');
 
     if (select.value === 'custom') {
         link.style.display = 'block';
@@ -41,21 +41,22 @@ function handleMenuItemTypeChange(select) {
 }
 
 function addSubItem(button) {
-    const parentItem = button.closest('.vlx-menu-item');
+    const parentItem = button.closest('.js-menu-item');
     addMenuItem(parentItem);
 }
 
 function initializeSortable(element) {
     new Sortable(element, {
         group: 'menu-items',
-        handle: '.vlx-menu-item__drag-handle',
-        animation: 150
+        handle: '.js-menu-item-drag',
+        swapThreshold: 0.25,
+        animation: 150,
     });
 }
 
 // Initialize existing menu items
 document.addEventListener('DOMContentLoaded', function () {
-    initializeSortable(document.getElementById("menuItems"));
+    initializeSortable(document.querySelector(".js-menu-items"));
 
     if (menuItems.length) {
         renderMenuItems(menuItems);
@@ -66,11 +67,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function renderMenuItems(items, parentElement = null) {
     items.forEach(item => {
-        const template = document.getElementById('menuItemTemplate').innerHTML;
+        const template = document.querySelector('.js-menu-template').innerHTML;
         const newItem = template.replaceAll('__ID__', nextId++);
         const container = parentElement ?
-            parentElement.querySelector('.vlx-menu-item__children') :
-            document.getElementById('menuItems');
+            parentElement.querySelector('.js-menu-item-children') :
+            document.querySelector('.js-menu-items');
 
         container.insertAdjacentHTML('beforeend', newItem);
 
@@ -101,13 +102,14 @@ function renderMenuItems(items, parentElement = null) {
 
 // Form submission
 function initFormSubmit() {
-    document.querySelector('.js-menu-update').addEventListener('click', function (e) {
+    const form = document.querySelector('.js-menu-form');
+    form.querySelector('.js-menu-update').addEventListener('click', function (e) {
+        console.log('Form submission initiated');
         e.preventDefault();
-        form = document.querySelector('#menuForm');
 
         // Convert form data to structured menu items
         const menuItems = [];
-        const items = document.getElementById('menuItems').children;
+        const items = form.querySelector('.js-menu-items').children;
 
         Array.from(items).forEach(item => {
             menuItems.push(processMenuItem(item));
@@ -138,7 +140,7 @@ function processMenuItem(element) {
         }
     });
 
-    const children = element.querySelector('.vlx-menu-item__children').children;
+    const children = element.querySelector('.js-menu-item-children').children;
     if (children.length) {
         item.children = Array.from(children).map(child => processMenuItem(child));
     }

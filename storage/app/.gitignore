@@ -1,3 +1,5 @@
 *
 !public/
+!blocks/
+!blocks/*
 !.gitignore

@@ -7,11 +7,15 @@
 
 <title>Edit menu || {{ env('APP_NAME') }}</title>
 
-<link rel="stylesheet" href="/css/menu-builder.css?{{ time() }}">
 <script>
-    let menuItems = {!! json_encode($menu->items) !!};
+    let menuItems = {!! json_encode($menu->items ?? []) !!};
 </script>
+
+<link rel="stylesheet" href="/css/menu-builder.css?{{ time() }}">
 <script src="/js/menu-builder.js?{{ time() }}"></script>
+
+{{-- <link rel="stylesheet" href="/css/menu-builder.min.css?{{ time() }}">
+<script src="/js/menu-builder.min.js?{{ time() }}"></script> --}}
 
 @endsection
 

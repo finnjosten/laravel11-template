@@ -83,20 +83,64 @@
                     };
                 }
             </script>
-            <script>
-                @if (session()->has('info'))
-                    toastInfo("{{ session()->get('info') }}");
-                @endif
-                @if (session()->has('success'))
-                    toastSuccess("{{ session()->get('success') }}");
-                @endif
-                @if (session()->has('warning'))
-                    toastWarning("{{ session()->get('warning') }}");
-                @endif
-                @if (session()->has('error'))
-                    toastError("{{ session()->get('error') }}");
-                @endif
-            </script>
+            @php
+                $success = $info = $warning = $error = [];
+                $full_stop = false;
+                $i = 0;
+                while(!$full_stop && $i < 50) {
+                    if ($i == 0) {
+                        if (session()->has('info')) $info[] = session()->get('info');
+                        if (session()->has('success')) $success[] = session()->get('success');
+                        if (session()->has('warning')) $warning[] = session()->get('warning');
+                        if (session()->has('error')) $error[] = session()->get('error');
+                    } else {
+                        $info_stop = $suc_stop = $war_stop = $err_stop = false;
+                        if (session()->has('info' . $i)) {
+                            $info[] = session()->get('info' . $i);
+                        } else {
+                            $info_stop = true;
+                        }
+
+                        if (session()->has('success' . $i)) {
+                            $success[] = session()->get('success' . $i);
+                        } else {
+                            $suc_stop = true;
+                        }
+
+                        if (session()->has('warning' . $i)) {
+                            $warning[] = session()->get('warning' . $i);
+                        } else {
+                            $war_stop = true;
+                        }
+
+                        if (session()->has('error' . $i)) {
+                            $error[] = session()->get('error' . $i);
+                        } else {
+                            $err_stop = true;
+                        }
+
+                        if ($suc_stop && $war_stop && $err_stop && $info_stop) {
+                            $full_stop = true;
+                        }
+                    }
+                    $i++;
+                }
+
+                echo '<script>';
+                foreach($info as $message) {
+                    echo 'toastInfo("' . $message . '");';
+                }
+                foreach($success as $message) {
+                    echo 'toastSuccess("' . $message . '");';
+                }
+                foreach($warning as $message) {
+                    echo 'toastWarning("' . $message . '");';
+                }
+                foreach($error as $message) {
+                    echo 'toastError("' . $message . '");';
+                }
+                echo '</script>';
+            @endphp
         </div>
 
         @stack('scripts')

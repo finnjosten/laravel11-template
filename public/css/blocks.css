@@ -2,8 +2,10 @@
 .vlx-header { margin-top: var(--navbar-height); }
 
 /** Header > Home **/
-.vlx-header.vlx-header--home { min-height: calc(100vh - var(--navbar-height)); display: flex; align-items: center; justify-content: center; flex-direction: column; background-color: var(--bg-clr); background-image: url(/images/hero-background.svg); background-size: cover; background-position: top; }
-.vlx-header.vlx-header--home *:is(h1,h2,h3) { --lh: 1.25; text-align: center; color: var(--accent); }
+.vlx-header.vlx-header--home { min-height: calc(70vh - var(--navbar-height)); display: flex; align-items: center; justify-content: center; flex-direction: column; background-color: var(--bg-clr); background-image: url(/images/hero-background.svg); background-size: cover; background-position: top; }
+.vlx-header.vlx-header--home .vlx-text > *:is(h1,h2,h3) { --lh: 1.25; text-align: center; color: var(--accent); }
+.vlx-header.vlx-header--home .vlx-text > *:not(h1,h2,h3,:is(ul, ol) li) { --fs: var(--fs-h6); }
+.vlx-header.vlx-header--home * { text-align: center; }
 .vlx-header.vlx-header--home .vlx-icon { --w: 60px; --h: 60px; --clr: var(--accent); position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); opacity: .7; }
 
 
@@ -31,13 +33,13 @@
 
 /** Blocks > Text Image **/
 .vlx-block--text-image { }
-.vlx-block--text-image .container { display: grid; grid-template-columns: repeat(2, 1fr); }
+.vlx-block--text-image .container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
 
-.vlx-block--text-image h2 { max-width: 80%; margin-bottom: 32px; }
+.vlx-block--text-image h2 { max-width: 80%; margin-bottom: 16px; }
 .vlx-block--text-image p { max-width: 80%; }
 .vlx-block--text-image .btn.btn--link { --fs: var(--fs-medium); color: var(--accent); }
 .vlx-block--text-image .vlx-text { display: flex; justify-content: center; flex-direction: column; }
-.vlx-block--text-image .vlx-text p:not(:last-child) { margin-bottom: 32px; }
+.vlx-block--text-image .vlx-text p:not(:last-of-type) { margin-bottom: 32px; }
 .vlx-block--text-image .vlx-text img { display: none; }
 
 .vlx-block--text-image .vlx-image { width: 100%; height: 100%; max-height: 500px; }

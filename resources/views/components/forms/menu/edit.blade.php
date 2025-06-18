@@ -1,4 +1,4 @@
-<form method="POST" class="vlx-form" action="{{ route("dashboard.menus.update", $menu->id) }}" id="menuForm">
+<form method="POST" class="vlx-form js-menu-form" action="{{ route("dashboard.menus.update", $menu->id) }}">
     @csrf
 
     <div class="vlx-form__box vlx-form__box--hor">
@@ -19,14 +19,14 @@
                     Add menu item
                 </button>
             </div>
-            <div id="menuItems" class="vlx-menu-builder__items">
+            <div class="vlx-menu-builder__items js-menu-items">
                 <!-- Menu items will be rendered here -->
             </div>
         </div>
     </div>
 
     <div class="vlx-form__box">
-        <button type="submit" name="update" class="btn btn--success btn--small js-menu-update">
+        <button type="button" class="btn btn--success btn--small js-menu-update">
             <x-icon icon="floppy-disk" size="small" />
             Update
         </button>
@@ -34,11 +34,11 @@
 
 </form>
 
-<template id="menuItemTemplate">
-    <div class="vlx-menu-item" data-item-id="__ID__">
+<template class="js-menu-template">
+    <div class="vlx-menu-item js-menu-item" data-item-id="__ID__">
         <div class="vlx-menu-item__header">
             <div class="vlx-menu-item__title">
-                <div class="vlx-menu-item__drag-handle"><x-icon icon="bars" /></div>
+                <div class="vlx-menu-item__drag-handle js-menu-item-drag"><x-icon icon="bars" /></div>
                 <p class="js-menu-title">New Item</p>
             </div>
 
@@ -53,13 +53,13 @@
                 </button>
             </div>
         </div>
-        <div class="vlx-menu-item__content" style="display: none;">
+        <div class="vlx-menu-item__content js-menu-item-content" style="display: none;">
             <div class="vlx-form__box">
                 <x-forms.input label="Title" name="items[__ID__][title]" type="text" attrs="required" />
             </div>
             <div class="vlx-form__box vlx-form__box--hor">
                 <x-forms.select label="Type" name="items[__ID__][type]" :options="['custom' => 'Custom', 'page' => 'Page']" attrs="onchange=handleMenuItemTypeChange(this)" />
-                <x-forms.input label="URL" name="items[__ID__][url]" type="text" top-class="link-input" />
+                <x-forms.input label="URL" name="items[__ID__][url]" type="text" top-class="js-link-input" />
 
                 @php
                     $options = [];
@@ -68,7 +68,7 @@
                         foreach ($pages as $page) $options[$page->id] = $page->title;
                     }
                 @endphp
-                <x-forms.select label="Page" name="items[__ID__][page_id]" :options="$options" top-class="page-select" />
+                <x-forms.select label="Page" name="items[__ID__][page_id]" :options="$options" top-class="js-page-select" />
             </div>
             <div class="vlx-form__box vlx-form__box--hor">
                 <x-forms.select label="Visibility" name="items[__ID__][visibility]" :options="['all' => 'All users', 'guest' => 'Guests only', 'auth' => 'Authenticated only']" />
@@ -79,6 +79,6 @@
                 Add Sub-item
             </button>
         </div>
-        <div class="vlx-menu-item__children"></div>
+        <div class="vlx-menu-item__children js-menu-item-children"></div>
     </div>
 </template>

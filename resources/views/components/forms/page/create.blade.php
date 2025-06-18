@@ -3,7 +3,7 @@
 
     <div class="vlx-form__box vlx-form__box--hor">
         <x-forms.input label="Page title" type="text" name="title" class="js-auto-update" attrs="required maxlength=255 data-auto-update=page-slug data-auto-update-parse=slugify" />
-        <x-forms.input label="Slug" id="page-slug" type="text" name="slug" desc="Use {none} to dictate that a page should be accessable directly on / (like a homepage). note the page cant be reached via /{none}" />
+        <x-forms.input label="Slug" id="page-slug" type="text" name="slug" desc="Use {none} to dictate that a page should be accessable directly on / (like a homepage). The page cant be reached via /{none}" />
     </div>
 
     <div class="vlx-form__box vlx-form__box--hor">

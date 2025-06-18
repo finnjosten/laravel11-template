@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\Maintenance;
 use App\Http\Middleware\AuthAdmin;
+use App\Http\Middleware\DefineAPI;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,8 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(DefineAPI::class);
         $middleware->append(Maintenance::class);
-
+        $middleware->validateCsrfTokens(except: [
+            'api/*',
+        ]);
         $middleware->appendToGroup('auth-admin', [
             AuthAdmin::class,
         ]);
