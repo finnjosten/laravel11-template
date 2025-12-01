@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+
+use App\Models\User;
 use Ramsey\Uuid\Uuid as UUID;
+use Illuminate\Validation\Rules\Password as PasswordRule;
+
+use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller {
 
@@ -20,21 +24,37 @@ class AuthController extends Controller {
     }
 
     public function registerPost(Request $request) {
-        $data = $request->only('name', 'email', 'password');
+        $data = $request->only('name', 'email', 'password', 'password_confirmation', 'g-recaptcha-response');
 
-        $this->validate($data, [
-            'name' => 'required|unique:users,name',
-            'email' => 'required|email|unique:users',
-            'password' => 'required',
+        $validation = $this->validate($data, [
+            'name' => ['required', 'unique:users', 'regex:/^[a-zA-Z0-9_-]{3,}$/'],
+            'email' => ['required', 'email', 'unique:users'],
+            'password' => ['required', 'confirmed', PasswordRule::min(8)->letters()->numbers()->symbols()->uncompromised()],
+            'g-recaptcha-response' => 'required|recaptchav3:register',
+        ], [
+            'name.regex' => __('Username does not meet the requirements.'),
+            'password.uncompromised' => __('The password is in a data breach. Use a different one.'),
         ]);
 
-        $data['uuid'] = UUID::uuid4()->toString();
-        $data['admin'] = null;
-        $data['blocked'] = null;
-        $data['verified'] = null;
+        if ($validation['success'] == false) return $validation['redirect'];
+
+        $uuid = UUID::uuid4()->toString();
+
+        if (empty($uuid)) {
+            return redirect()->back()->with('error', 'UUID generation failed')->withInput();
+        }
 
         // Create the user
-        $user = User::create($data);
+        $user = User::create([
+            'name' => strtolower($data['name']),
+            'uuid' => $uuid,
+            'email' => strtolower($data['email']),
+            'password' => bcrypt($data['password']),
+            'blocked' => null,
+            'limit' => null,
+        ]);
+
+        event(new Registered($user));
 
         // Redirect to the login page
         if (API_RESPONSE) {
@@ -116,6 +136,8 @@ class AuthController extends Controller {
 
 
     public function logout() {
+        $this->checkSinglePermission('auth.logout');
+
         if (!Auth::check()) {
             if (API_RESPONSE) {
                 return response()->json([
@@ -147,27 +169,5 @@ class AuthController extends Controller {
         // Log the user out
         Auth::logout();
         return redirect()->route('login')->with('success', 'Logout successful');
-    }
-
-
-
-    public function reset() {
-        return view('pages.auth.reset-pass');
-    }
-
-    public function resetPost(Request $request) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'This endpoint is not implemented yet.',
-        ], 501);
-
-
-        $request->validate(['email' => 'required|email']);
-
-        $status = Password::sendResetLink( $request->only('email') );
-
-        //dd($status);
-
-        return null; //$status === Password::ResetLinkSent ? back()->with(['status' => __($status)]) : back()->withErrors(['email' => __($status)]);
     }
 }
