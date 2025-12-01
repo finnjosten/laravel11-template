@@ -6,14 +6,14 @@ use Illuminate\Console\Command;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
 
-class minifier extends Command
+class Minifier extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:minify';
+    protected $signature = 'static:minify';
 
     /**
      * The console command description.
