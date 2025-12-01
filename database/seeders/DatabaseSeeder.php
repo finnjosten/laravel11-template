@@ -3,41 +3,43 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Role;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use Ramsey\Uuid\Uuid as UUID;
 
 class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
      */
-    public function run(): void {
+    public function run(): void
+    {
 
-        if(env('SETTING_DEFAULT_ACCOUNTS')) {
-            \App\Models\User::factory()->create(array(
-                'uuid' => UUID::uuid4()->toString(),
-                'name' =>'admin',
-                'email' => 'admin@app.com',
-                'password' => Hash::make('password'),
-                'blocked' => false,
-                'verified' => true,
-                'admin' => true,
-            ));
+        Role::factory()->create([
+            'name' => 'Super Admin',
+            'slug' => 'super-admin',
+            'permissions' => serialize(['*']),
+        ]);
 
-            \App\Models\User::factory()->create(array(
-                'uuid' => UUID::uuid4()->toString(),
-                'name' =>'user',
-                'email' => 'user@app.com',
-                'password' => Hash::make('password'),
-                'blocked' => false,
-                'verified' => true,
-                'admin' => false,
-            ));
-        }
+        Role::factory()->create([
+            'name' => 'Admin',
+            'slug' => 'admin',
+            'permissions' => serialize(['*']),
+        ]);
+
+        Role::factory()->create([
+            'name' => 'User',
+            'slug' => 'user',
+            'permissions' => serialize([
+                'password.*',
+                'profile.*',
+                'verify.*',
+                'auth.*',
+            ]),
+        ]);
 
 
-        // Seed default users
+
         $users = unserialize(env('USER_DATA', 'a:0:{}'));
 
         foreach ($users as $user) {

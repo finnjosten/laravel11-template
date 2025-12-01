@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use \Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -18,12 +19,17 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
-        'admin',
-        'blocked',
+        'role_slug',
+
         'verified',
+        'blocked',
+
+        'name',
+
+        'email_verified_at',
+        'updated_at',
     ];
 
     /**
@@ -37,24 +43,28 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
+     * Get the attributes that should be cast.
      *
-     * @var array<string, string>
+     * @return array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 
-    public function isAdmin() {
-        return $this->admin === 1;
+    public function isVerified() {
+        return Auth::user()->verified;
     }
 
     public function isBlocked() {
-        return $this->blocked === 1;
+        return Auth::user()->blocked;
     }
 
-    public function isVerified() {
-        return $this->verified === 1;
+    public function isAdmin() {
+        return Auth::user()->role_slug == 'admin';
+    }
+
+    public function role() {
+        return $this->belongsTo(Role::class, 'role_slug', 'slug');
     }
 }

@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Ramsey\Uuid\Uuid as UUID;
 
 return new class extends Migration
 {
@@ -12,15 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string("uuid")->unique()->default('');
-            $table->string('name');
+
+            // Login info
             $table->string('email')->unique();
             $table->string('password');
-            $table->boolean("blocked")->default(false)->nullable();
-            $table->boolean("verified")->default(false)->nullable();
-            $table->boolean("admin")->default(false)->nullable();
+
+            // User info
+            $table->string('role_slug')->default('user');
+            $table->foreign('role_slug')->references('slug')->on('roles');
+
+            // User status
+            $table->boolean('verified')->default(false);
+            $table->boolean('blocked')->default(false);
+
+            // Personal information
+            $table->string('name');
+
             $table->rememberToken();
             $table->timestamps();
         });
@@ -38,7 +47,6 @@ return new class extends Migration
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
-            $table->timestamps();
         });
     }
 
@@ -48,5 +56,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('sessions');
     }
 };
