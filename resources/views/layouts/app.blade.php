@@ -5,9 +5,9 @@
         @include('layouts.partials.meta')
         @include('layouts.partials.styles')
 
-        <script src="/js/app.js?v=1.0"></script>
-        <script src="/js/jquery.min.js?v=3.7.1"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+        <script src="/js/app.min.js?v=1.0"></script>
+        <script src="/js/jquery.min.js?v=3.7.1" defer></script>
+        {!! RecaptchaV3::initJs() !!}
 
         @stack('styles')
         @yield('head')
@@ -16,10 +16,11 @@
     <body class="show-nav-@yield('show-nav', 'true')">
         @include('components.navbar')
         @yield('content')
+        @include('components.footer')
 
         <div class="vlx-toast">
             <script src="/js/notyf.min.js"></script>
-            {{-- <script src="/js/toastr.js?v=2.1.1"></script> --}}
+            {{-- <script src="/js/toastr.min.js?v=2.1.1"></script> --}}
 
             <script>
                 if (isNotyfAvailable()) {
@@ -83,64 +84,34 @@
                     };
                 }
             </script>
-            @php
-                $success = $info = $warning = $error = [];
-                $full_stop = false;
-                $i = 0;
-                while(!$full_stop && $i < 50) {
-                    if ($i == 0) {
-                        if (session()->has('info')) $info[] = session()->get('info');
-                        if (session()->has('success')) $success[] = session()->get('success');
-                        if (session()->has('warning')) $warning[] = session()->get('warning');
-                        if (session()->has('error')) $error[] = session()->get('error');
+            <script>
+                @if (session()->has('info'))
+                    toastInfo("{{ session()->get('info') }}");
+                @endif
+                @if (session()->has('success'))
+                    toastSuccess("{{ session()->get('success') }}");
+                @endif
+                @if (session()->has('warning'))
+                    toastWarning("{{ session()->get('warning') }}");
+                @endif
+                @if (session()->has('error'))
+                    toastError("{{ session()->get('error') }}");
+                @endif
+
+                @php
+                    if(session()->has('errors')) {
+                        $errors = session()->get('errors');
                     } else {
-                        $info_stop = $suc_stop = $war_stop = $err_stop = false;
-                        if (session()->has('info' . $i)) {
-                            $info[] = session()->get('info' . $i);
-                        } else {
-                            $info_stop = true;
-                        }
-
-                        if (session()->has('success' . $i)) {
-                            $success[] = session()->get('success' . $i);
-                        } else {
-                            $suc_stop = true;
-                        }
-
-                        if (session()->has('warning' . $i)) {
-                            $warning[] = session()->get('warning' . $i);
-                        } else {
-                            $war_stop = true;
-                        }
-
-                        if (session()->has('error' . $i)) {
-                            $error[] = session()->get('error' . $i);
-                        } else {
-                            $err_stop = true;
-                        }
-
-                        if ($suc_stop && $war_stop && $err_stop && $info_stop) {
-                            $full_stop = true;
-                        }
+                        $errors = new \Illuminate\Support\MessageBag();
                     }
-                    $i++;
-                }
+                @endphp
 
-                echo '<script>';
-                foreach($info as $message) {
-                    echo 'toastInfo("' . $message . '");';
-                }
-                foreach($success as $message) {
-                    echo 'toastSuccess("' . $message . '");';
-                }
-                foreach($warning as $message) {
-                    echo 'toastWarning("' . $message . '");';
-                }
-                foreach($error as $message) {
-                    echo 'toastError("' . $message . '");';
-                }
-                echo '</script>';
-            @endphp
+                @if ($errors->any())
+                    @foreach ($errors->all() as $inputError)
+                        toastError("{{ $inputError }}");
+                    @endforeach
+                @endif
+            </script>
         </div>
 
         @stack('scripts')

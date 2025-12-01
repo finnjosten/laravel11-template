@@ -1,10 +1,5 @@
 <form method="POST" class="vlx-form" action="{{ route('dashboard.user.create') }}">
     @csrf
-    @php
-        use App\Models\Role;
-        $roles = Role::all()->pluck('name', 'slug')->toArray();
-        dd($roles);
-    @endphp
 
     <div class="vlx-form__box vlx-form__box">
         <x-forms.input label="UUID" name="uuid" type="text" value="{{ Ramsey\Uuid\Uuid::uuid4()->toString() }}" attrs="required readonly" />
@@ -15,12 +10,11 @@
         <x-forms.input label="Email" name="email" type="email" attrs="required" />
     </div>
 
-    <div class="vlx-form__box vlx-form__box">
-        <x-forms.select label="Role" name="role" :options="$roles" attrs="required" />
-    </div>
-
     <div class="vlx-form__box vlx-form__box--hor">
+        <x-forms.switch label="Admin" sublabel="user is an admin" name="admin" />
         <x-forms.switch label="Verified" sublabel="user is verified" name="verified" />
+    </div>
+    <div class="vlx-form__box vlx-form__box--hor">
         <x-forms.switch label="Blocked" sublabel="block user" name="blocked" />
     </div>
 

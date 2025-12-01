@@ -23,22 +23,10 @@
     <section class="vlx-block vlx-block--auth">
         <div class="vlx-container d-flex">
 
-            <form
-                method="post"
-                class="vlx-card vlx-card--auth vlx-card--reset-pass"
-
-                @if (!empty(request()->query('return')))
-                    action="{{ route('reset.post', ["return" => request()->query('return')]) }}"
-                @else
-                    action="{{ route('reset.post') }}"
-                @endif
-            >
-                <div class="vlx-card__header">
-                    <img src="{{ env('APP_LOGO') }}" alt="{{ env('APP_NAME') }}" class="logo">
-                </div>
-
+            <form method="post" class="vlx-card vlx-card--auth vlx-card--reset-pass" action="{{ route('password.request.post') }}">
                 <div class="vlx-card__body">
                     @csrf
+                    {!! RecaptchaV3::field('password') !!}
 
                     <div class="input-wrapper input-wrapper--email">
                         <label for="email">Email Address</label>
@@ -50,7 +38,9 @@
                 </div>
 
                 <div class="vlx-card__footer">
-                    <button class="btn">Send reset link</button>
+                    <div class="btn-group btn-group--vert">
+                        <button class="btn btn--primary">Send reset link</button>
+                    </div>
                     <div class="vlx-btn-bar">
                         <a href="{{ route('login') }}">Login</a>
                     </div>

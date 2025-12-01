@@ -5,7 +5,7 @@
 <!-- Page head -->
 @section('head')
 
-<title>Pages || {{ env('APP_NAME') }}</title>
+<title>Roles || {{ env('APP_NAME') }}</title>
 
 @endsection
 
@@ -13,49 +13,49 @@
 @section('content')
 
 @php
-    $pages = App\Models\Page::all();
+    $roles = App\Models\Role::all();
 @endphp
 
-<main class="dash pages">
-    @include('components.account.sidebar', ['page' => 'pages'])
+<main class="dash roles">
+    @include('components.account.sidebar', ['page' => 'role'])
 
-    <section class="vlx-block vlx-block--dash-pages wst--large wsb--medium bg--normal">
+    <section class="vlx-block vlx-block--dash-roles wst--large wsb--medium bg--normal">
         <div class="container">
-            @if (!empty($pages))
+            @if (!empty($roles))
 
                 <div class="vlx-block__header">
                     <div class="vlx-form">
                         <div class="vlx-form__box vlx-form__box--hor">
                             <div class="vlx-input-group">
-                                <x-forms.input type="text" name="search" placeholder="Search through pages..." class="js-search-input" />
+                                <x-forms.input type="text" name="search" placeholder="Search roles..." class="js-search-input" />
                                 <span class="vlx-icon--wrapper">
                                     <x-icon icon="magnifying-glass" size="small" />
                                 </span>
                             </div>
                             <div class="vlx-input-group">
-                                <p class="js-search-count">{{ count($pages) }} @if (count($pages) > 1) results @else result @endif</p>
+                                <p class="js-search-count">{{ count($roles) }} @if (count($roles) > 1) results @else result @endif</p>
                             </div>
                         </div>
                     </div>
                     <div class="btn-group btn-group--right">
-                        <a href="{{ route('dashboard.pages.create') }}" class="btn btn--primary btn--small">
+                        <a href="{{ route('dashboard.role.create') }}" class="btn btn--primary btn--small">
                             <x-icon icon="plus" size="small" />
-                            Add page
+                            Add role
                         </a>
                     </div>
                 </div>
 
                 <div class="inner d-grid js-search-items">
-                    @foreach ($pages as $page)
-                        <x-cards.pages :page="$page" />
+                    @foreach ($roles as $role)
+                        <x-cards.roles :role="$role" />
                     @endforeach
                 </div>
 
             @else
 
                 <div class="vlx-empty">
-                    <h2>No users found</h2>
-                    <p>It seems you don't have any users yet.</p>
+                    <h2>No roles found</h2>
+                    <p>It seems you don't have any roles yet.</p>
                 </div>
 
             @endif

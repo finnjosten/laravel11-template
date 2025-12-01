@@ -22,22 +22,10 @@
     <section class="vlx-block vlx-block--auth">
         <div class="vlx-container d-flex">
 
-            <form
-                method="post"
-                class="vlx-card vlx-card--auth vlx-card--login"
-
-                @if (!empty(request()->query('return')))
-                    action="{{ route('login.post', ["return" => request()->query('return')]) }}"
-                @else
-                    action="{{ route('login.post') }}"
-                @endif
-            >
-                <div class="vlx-card__header">
-                    <img src="{{ env('APP_LOGO') }}" alt="{{ env('APP_NAME') }}" class="logo">
-                </div>
-
+            <form method="post" class="vlx-card vlx-card--auth vlx-card--login" action="{{ route('login.post') }}">
                 <div class="vlx-card__body">
                     @csrf
+                    {!! RecaptchaV3::field('login') !!}
 
                     <div class="input-wrapper input-wrapper--email">
                         <label for="email">Email Address</label>
@@ -57,10 +45,15 @@
                 </div>
 
                 <div class="vlx-card__footer">
-                    <button class="btn">Login </button>
+                    <div class="btn-group btn-group--vert">
+                        <button class="btn btn--primary">Login </button>
+                        @if(env('SETTING_CAN_REGISTER'))
+                            <a class="btn btn--secondary" href="{{ route('register') }}">Sign up</a>
+                        @endif
+                    </div>
                     <div class="vlx-btn-bar">
-                        @if(env('SETTING_CAN_REGISTER')) <a href="{{ route('register') }}">Sign up</a> @endif
-                        @if(env('SETTING_CAN_RESET_PASSWORD')) <a href="{{ route('reset') }}">Forgot password</a> @endif
+                        @if(env('SETTING_CAN_RESET_PASSWORD')) <a href="{{ route('password.request') }}">Forgot password</a> @endif
+                        <a href="{{ route('home') }}">Home</a>
                     </div>
                 </div>
             </form>

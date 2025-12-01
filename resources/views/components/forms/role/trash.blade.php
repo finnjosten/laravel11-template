@@ -1,8 +1,8 @@
-<form method="POST" class="vlx-form" action="{{ route('dashboard.menus.delete', $menu->id) }}">
+<form method="POST" class="vlx-form" action="{{ route('dashboard.user.delete', $user->id) }}">
     @csrf
 
     <div class="vlx-form__box vlx-form__box--hor">
-        <label class="h4">Are you sure you want to delete this menu?</label>
+        <label class="h4">Are you sure you want to delete this user?</label>
     </div>
 
     <div class="vlx-form__box">

@@ -2,11 +2,7 @@
 <a href="{{ route('something.single', $item->slug) }}" class="vlx-card">
 
     <div class="vlx-card__header">
-        @if($item->getFirstMediaUrl())
-            <img src="{{ $item->getFirstMediaUrl() }}">
-        @else
-            <img src="https://picsum.photos/300/200">
-        @endif
+        <img src="https://picsum.photos/300/200">
     </div>
 
     <div class="vlx-card__body">

@@ -27,7 +27,7 @@
                 </a>
 
                 @if($mode == "edit")
-                    <a class="btn btn--primary btn--small btn--danger" href="{{ route('dashboard.contact.trash', $user->id) }}">
+                    <a class="btn btn--primary btn--small btn--danger" href="{{ route('dashboard.contact.trash', $contact->id) }}">
                         <x-icon icon="trash" size="small" />
                         Delete
                     </a>
