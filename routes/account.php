@@ -48,8 +48,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::view('/users', 'pages.account.users.index')->name('dashboard.user');
 
             // Users form endpoints
-            Route::get( '/users/create',        [UserController::class, 'create']   )->name('dashboard.user.create');  //FE
-            Route::post('/users/create',        [UserController::class, 'store']    )->name('dashboard.user.store');   //BE
+            Route::get( '/users/create',        [UserController::class, 'create']   )->name('dashboard.user.create');   //FE
+            Route::post('/users/create',        [UserController::class, 'store']    )->name('dashboard.user.store');    //BE
 
             Route::get( '/users/update/{user}', [UserController::class, 'edit']     )->name('dashboard.user.edit');     //FE
             Route::post('/users/update/{user}', [UserController::class, 'update']   )->name('dashboard.user.update');   //BE
@@ -63,40 +63,10 @@ Route::group(['middleware' => 'auth'], function () {
             Route::view('/contact', 'pages.account.contact.index')->name('dashboard.contact');
 
             // Contact form endpoints
-            Route::get( '/contact/view/{contact}',      [ContactController::class, 'view'])->name('dashboard.contact.view');      //FE
+            Route::get( '/contact/view/{contact}',      [ContactController::class, 'view']      )->name('dashboard.contact.view');      //FE
 
-            Route::get( '/contact/delete/{contact}',    [ContactController::class, 'trash'])->name('dashboard.contact.trash');    //FE
-            Route::post('/contact/delete/{contact}',    [ContactController::class, 'delete'])->name('dashboard.contact.delete');  //BE
-
-
-
-            // Pages
-            Route::get( '/pages',               [PageController::class, 'index'])->name('dashboard.pages');
-
-            // Pages form endpoints
-            Route::get( '/pages/create',        [PageController::class, 'create']   )->name('dashboard.pages.create');  //FE
-            Route::post('/pages/create',        [PageController::class, 'store']    )->name('dashboard.pages.store');   //BE
-
-            Route::get( '/pages/update/{id}',   [PageController::class, 'edit']     )->name('dashboard.pages.edit');    //FE
-            Route::post('/pages/update/{id}',   [PageController::class, 'update']   )->name('dashboard.pages.update');  //BE
-
-            Route::get( '/pages/delete/{id}',   [PageController::class, 'trash']    )->name('dashboard.pages.trash');   //FE
-            Route::post('/pages/delete/{id}',   [PageController::class, 'destroy']  )->name('dashboard.pages.delete');  //BE
-
-
-
-            // Menus
-            Route::get( '/menus',               [MenuController::class, 'index']    )->name('dashboard.menus');
-
-            // Menus form endpoints
-            Route::get( '/menus/create',        [MenuController::class, 'create']   )->name('dashboard.menus.create');  //FE
-            Route::post('/menus/create',        [MenuController::class, 'store']    )->name('dashboard.menus.store');   //BE
-
-            Route::get( '/menus/update/{id}',   [MenuController::class, 'edit']     )->name('dashboard.menus.edit');    //FE
-            Route::post('/menus/update/{id}',   [MenuController::class, 'update']   )->name('dashboard.menus.update');  //BE
-
-            Route::get( '/menus/delete/{id}',   [MenuController::class, 'trash']    )->name('dashboard.menus.trash');   //FE
-            Route::post('/menus/delete/{id}',   [MenuController::class, 'destroy']  )->name('dashboard.menus.delete');  //BE
+            Route::get( '/contact/delete/{contact}',    [ContactController::class, 'trash']     )->name('dashboard.contact.trash');     //FE
+            Route::post('/contact/delete/{contact}',    [ContactController::class, 'destroy']   )->name('dashboard.contact.delete');    //BE
 
         });
     });
