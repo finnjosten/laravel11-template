@@ -7,6 +7,8 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class Controller extends BaseController {
     use AuthorizesRequests, ValidatesRequests;
@@ -84,8 +86,12 @@ class Controller extends BaseController {
      *                          If false, will return false if the user does not have permission
      * @return bool
      */
-    public function checkPermission(array $permissions, bool $use_response = true): bool {
-        $rolePerms = Request::user()->role->permissions;
+    public function checkPermission(array $permissions, bool $use_response = true): bool|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse {
+        if (!Auth::check()) {
+            return $this->deny($use_response);
+        }
+
+        $rolePerms = Auth::user()->role->permissions;
 
         // Check each required permission
         foreach ($permissions as $requiredPerms) {
@@ -199,6 +205,9 @@ class Controller extends BaseController {
      * @return bool Always returns false
      */
     private function deny(bool $use_response): bool|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse {
+
+        Log::info("Permission denied for user ID " . Auth::id(). " on " . request()->path());
+
         if ($use_response) {
             if (API_RESPONSE) {
                 return response()->json([
@@ -222,7 +231,7 @@ class Controller extends BaseController {
      * @param bool $use_response Whether to use HTTP response on failure
      * @return bool
      */
-    public function checkSinglePermission(string $permission, bool $use_response = true): bool {
+    public function checkSinglePermission(string $permission, bool $use_response = true): bool|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse {
         return $this->checkPermission([$permission], $use_response);
     }
 }

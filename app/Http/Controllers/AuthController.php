@@ -120,7 +120,7 @@ class AuthController extends Controller {
                 ]);
             }
 
-            return redirect()->route('dashboard.main')->with('success', 'Login successful');
+            return redirect()->route('profile')->with('success', 'Login successful');
         }
 
         // Authentication failed, redirect back with error message

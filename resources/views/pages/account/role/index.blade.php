@@ -47,7 +47,7 @@
 
                 <div class="inner d-grid js-search-items">
                     @foreach ($roles as $role)
-                        <x-cards.roles :role="$role" />
+                        <x-cards.role :role="$role" />
                     @endforeach
                 </div>
 

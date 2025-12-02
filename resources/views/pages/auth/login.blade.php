@@ -53,7 +53,7 @@
                     </div>
                     <div class="vlx-btn-bar">
                         @if(env('SETTING_CAN_RESET_PASSWORD')) <a href="{{ route('password.request') }}">Forgot password</a> @endif
-                        <a href="{{ route('home') }}">Home</a>
+                        <a href="{{ route('redirect.home') }}">Home</a>
                     </div>
                 </div>
             </form>

@@ -19,9 +19,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'api/*',
         ]);
-        $middleware->appendToGroup('auth-admin', [
-            AuthAdmin::class,
-        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

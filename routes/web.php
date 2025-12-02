@@ -29,12 +29,13 @@ if(env('SETTING_MAINTENANCE')) {
 }
 
 // Normal mode
+Route::redirect('/redirect/home', '/', 301)->name('redirect.home');
 
-Route::redirect('/redirect/home', '/', 301)->name('home');
+Route::view('/', 'pages.home')->name('pages.home');
 
-// Pages for on the navbar
-Route::view('/contact', 'pages.contact')->name('contact');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.add');
+// Contact pages
+Route::view('/contact', 'pages.contact')->name('pages.contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('pages.contact.add');
 
 // All other routes should be defined before this point
 

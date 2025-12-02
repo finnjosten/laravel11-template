@@ -5,26 +5,26 @@
 <!-- Page head -->
 @section('head')
 
-<title>Edit user || {{ env('APP_NAME') }}</title>
+<title>Edit role || {{ env('APP_NAME') }}</title>
 
 @endsection
 
 <!-- Page content -->
 @section('content')
 
-<main class="dash users">
-    @include('components.account.sidebar', ['page' => 'user'])
+<main class="dash roles">
+    @include('components.account.sidebar', ['page' => 'role'])
 
     <x-blocks.form class="wst--large wsb--medium bg--normal" container-class="container--x-small">
         <div class="vlx-block__header">
             <div class="btn-group btn-group--left">
-                <a class="btn btn--primary btn--small" href="{{ route('dashboard.user') }}">
+                <a class="btn btn--primary btn--small" href="{{ route('dashboard.role') }}">
                     <x-icon icon="arrow-left" size="small" />
                     Go back
                 </a>
 
                 @if($mode == "edit")
-                    <a class="btn btn--primary btn--small btn--danger" href="{{ route('dashboard.user.trash', $user->id) }}">
+                    <a class="btn btn--primary btn--small btn--danger" href="{{ route('dashboard.role.trash', $role->id) }}">
                         <x-icon icon="trash" size="small" />
                         Delete
                     </a>
@@ -33,11 +33,11 @@
         </div>
 
         @if($mode == 'edit')
-            @include('components.forms.user.edit', ['user' => $user])
+            @include('components.forms.role.edit', ['role' => $role])
         @elseif($mode == 'delete')
-            @include('components.forms.user.trash', ['user' => $user])
+            @include('components.forms.role.trash', ['role' => $role])
         @elseif($mode == 'add')
-            @include('components.forms.user.create')
+            @include('components.forms.role.create')
         @endif
     </x-blocks.form>
 

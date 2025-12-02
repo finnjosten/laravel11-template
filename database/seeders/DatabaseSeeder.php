@@ -18,24 +18,33 @@ class DatabaseSeeder extends Seeder
         Role::factory()->create([
             'name' => 'Super Admin',
             'slug' => 'super-admin',
-            'permissions' => serialize(['*']),
+            'permissions' => ['*'],
         ]);
 
         Role::factory()->create([
             'name' => 'Admin',
             'slug' => 'admin',
-            'permissions' => serialize(['*']),
+            'permissions' => [
+                'password.*',
+                'profile.*',
+                'user.*',
+                'role.*',
+                'verify.*',
+                'auth.*',
+                'menu.*',
+            ],
         ]);
 
         Role::factory()->create([
             'name' => 'User',
             'slug' => 'user',
-            'permissions' => serialize([
+            'permissions' => [
                 'password.*',
                 'profile.*',
                 'verify.*',
                 'auth.*',
-            ]),
+                'menu.user',
+            ],
         ]);
 
 

@@ -52,7 +52,7 @@ class UserController extends Controller {
             return redirect()->route('dashboard.user')->with('error', 'User not found');
         }
 
-        if ($user->id == auth()->user()->id) {
+        if ($user->id == Auth::user()->id) {
             if (API_RESPONSE) {
                 return response()->json([
                     'status' => 'error',
@@ -162,7 +162,7 @@ class UserController extends Controller {
             return redirect()->route('dashboard.user')->with('error', 'User not found');
         }
 
-        if ($user->id == auth()->user()->id) {
+        if ($user->id == Auth::user()->id) {
             if (API_RESPONSE) {
                 return response()->json([
                     'status' => 'error',
@@ -270,7 +270,7 @@ class UserController extends Controller {
             return redirect()->route('dashboard.user')->with('error', 'User not found');
         }
 
-        if ($user->id == auth()->user()->id) {
+        if ($user->id == Auth::user()->id) {
             if (API_RESPONSE) {
                 return response()->json([
                     'status' => 'error',
@@ -300,7 +300,7 @@ class UserController extends Controller {
             return redirect()->route('dashboard.user')->with('error', 'User not found');
         }
 
-        if ($user->id == auth()->user()->id) {
+        if ($user->id == Auth::user()->id) {
             if (API_RESPONSE) {
                 return response()->json([
                     'status' => 'error',

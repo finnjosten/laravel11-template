@@ -1,21 +1,26 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ResetController;
 
 // Authentication stuff (should not be turned off with normal maintenance mode)
 Route::group(['middleware' => 'guest'], function () {
 
-    Route::get('/forgot-password', [AuthController::class, 'reset'])->name('reset');
-    Route::post('/forgot-password', [AuthController::class, 'resetPost'])->name('reset.post');
+    Route::get('/forgot-password', [ResetController::class, 'request'])->name('password.request');
+    Route::post('/forgot-password', [ResetController::class, 'requestPost'])->name('password.request.post');
+
+    Route::get('/reset-password/{token}', [ResetController::class, 'reset'])->name('password.reset');
+    Route::post('/reset-password', [ResetController::class, 'resetPost'])->name('password.reset.post');
 
     // Setup redirects to login and register
     Route::get('/register', fn() => redirect()->route('register') );
     Route::get('/login', fn() => redirect()->route('login') );
 
     // Add a prefix
-    Route::group(['prefix' => vlx_get_auth_url()], function() {
+    Route::group(['prefix' => vlxGetAuthUrl()], function() {
 
         // Register
         Route::get('/register', [AuthController::class, 'register'])->name('register');

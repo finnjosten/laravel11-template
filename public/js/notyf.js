@@ -247,10 +247,13 @@ var Notyf = (function () {
             var i = this;
             this.notifications.push(t);
             var e = (void 0 !== t.options.duration ? t : this).options.duration;
-            e &&
-                setTimeout(function () {
-                    return i._removeNotification(t);
-                }, e);
+            // Add a check for the permanent option
+            if (t.options.permanent != true) {
+                e &&
+                    setTimeout(function () {
+                        return i._removeNotification(t);
+                    }, e);
+            }
         }),
         (d.prototype._removeNotification = function (t) {
             t = this.notifications.indexOf(t);

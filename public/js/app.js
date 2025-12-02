@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     initAutoUpdater();
     initSearchInputs();
+    initCopyBtns();
     initPasswordToggles();
     initTabs();
 });
@@ -90,10 +91,10 @@ function initSearchInputs() {
             });
 
             if (found) {
-                item.style.display = 'block';
+                item.classList.remove('--hidden');
                 visibleCount++;
             } else {
-                item.style.display = 'none';
+                item.classList.add('--hidden');
             }
         });
 
@@ -101,6 +102,26 @@ function initSearchInputs() {
         if (searchCountElement) {
             searchCountElement.textContent = visibleCount + (visibleCount === 1 ? ' result' : ' results');
         }
+    });
+}
+
+function initCopyBtns() {
+    const btns = document.querySelectorAll('.js-copy');
+
+    btns.forEach(btn => {
+        btn.addEventListener('click', function(event) {
+            event.preventDefault();
+            const textToCopy = btn.getAttribute('data-copy');
+            if (textToCopy) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    toastSuccess('Link copied to clipboard!');
+                }).catch(err => {
+                    toastError('Failed to copy link:', err);
+                });
+            } else {
+                toastWarning('No link found to copy.');
+            }
+        });
     });
 }
 
@@ -277,8 +298,8 @@ function toastWarning(message, second_message) {
  * @param {string} message
  * @param {string} second_message
  */
-function toastError(message, second_message) {
-    showToast('error', message, second_message);
+function toastError(message, second_message, permanent = false) {
+    showToast('error', message, second_message, permanent);
     console.error(message, second_message);
 }
 
@@ -289,7 +310,7 @@ function toastError(message, second_message) {
  * @param {string} message - Primary message to display
  * @param {string} second_message - Optional secondary message
  */
-function showToast(type, message, second_message) {
+function showToast(type, message, second_message, permanent = false) {
     if (isToastrAvailable()) {
         toastr[type](message);
         if (second_message) {
@@ -298,9 +319,9 @@ function showToast(type, message, second_message) {
     }
 
     if (isNotyfAvailable()) {
-        notyf.open({type, message});
+        notyf.open({type, message, permanent});
         if (second_message) {
-            notyf.open({type, message: second_message});
+            notyf.open({type, message: second_message, permanent});
         }
     }
 }
