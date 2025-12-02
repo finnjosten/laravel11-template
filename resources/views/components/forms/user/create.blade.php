@@ -3,12 +3,7 @@
     @php
         use App\Models\Role;
         $roles = Role::all()->pluck('name', 'slug')->toArray();
-        dd($roles);
     @endphp
-
-    <div class="vlx-form__box vlx-form__box">
-        <x-forms.input label="UUID" name="uuid" type="text" value="{{ Ramsey\Uuid\Uuid::uuid4()->toString() }}" attrs="required readonly" />
-    </div>
 
     <div class="vlx-form__box vlx-form__box--hor">
         <x-forms.input label="Name" name="name" type="text" attrs="required" />

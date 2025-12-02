@@ -1,9 +1,9 @@
 <form method="POST" class="vlx-form" action="{{ route('dashboard.user.update', $user->id) }}">
     @csrf
-
-    <div class="vlx-form__box vlx-form__box">
-        <x-forms.input label="UUID" name="uuid" type="text" value="{{ $user->uuid }}" attrs="required readonly" />
-    </div>
+    @php
+        use App\Models\Role;
+        $roles = Role::all()->pluck('name', 'slug')->toArray();
+    @endphp
 
     <div class="vlx-form__box vlx-form__box--hor">
         <x-forms.input label="Name" name="name" type="text" value="{{ $user->name }}" attrs="required" />
@@ -11,7 +11,7 @@
     </div>
 
     <div class="vlx-form__box vlx-form__box">
-        <x-forms.select label="Role" name="role" :options="$roles" :selected="$user->slug" attrs="required" />
+        <x-forms.select label="Role" name="role" :options="$roles" :selected="$user->role->slug" attrs="required" />
     </div>
 
     <div class="vlx-form__box vlx-form__box--hor">

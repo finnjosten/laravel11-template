@@ -34,13 +34,18 @@
         </div>
 
         <div class="vlx-form">
-            <div class="vlx-form__box">
-                <x-forms.input label="UUID" name="uuid" type="text" value="{{ $user->uuid }}" attrs="required readonly" />
-            </div>
-
             <div class="vlx-form__box vlx-form__box--hor">
                 <x-forms.input label="Name" name="name" type="text" value="{{ $user->name }}" attrs="required readonly" />
                 <x-forms.input label="Email" name="email" type="email" value="{{ $user->email }}" attrs="required readonly" />
+            </div>
+
+            <div class="vlx-form__box vlx-form__box">
+                <x-forms.input label="Role" name="role" type="text" value="{{ $user->role->name }}" attrs="readonly" />
+            </div>
+
+            <div class="vlx-form__box vlx-form__box--hor">
+                <x-forms.input label="Verified" name="verified" type="text" value="{{ $user->isVerified() ? 'Yes' : 'No' }}" attrs="readonly" />
+                <x-forms.input label="Blocked" name="blocked" type="text" value="{{ $user->isBlocked() ? 'Yes' : 'No' }}" attrs="readonly" />
             </div>
 
             <form method="POST" class="vlx-form__box" action="{{ route('logout') }}">

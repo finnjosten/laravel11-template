@@ -1,10 +1,6 @@
 <form method="POST" class="vlx-form" action="{{ route('profile.update') }}">
     @csrf
 
-    <div class="vlx-form__box">
-        <x-forms.input label="UUID" name="uuid" type="text" value="{{ $user->uuid }}" attrs="required readonly" />
-    </div>
-
     <div class="vlx-form__box vlx-form__box--hor">
         <x-forms.input label="Name" name="name" type="text" value="{{ $user->name }}" attrs="required" />
         <x-forms.input label="Email" name="email" type="email" value="{{ $user->email }}" attrs="required" />
