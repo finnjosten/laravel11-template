@@ -22,7 +22,7 @@
 <section class="{{ $block_classes }}" {{ $id ? "id='$id'" : '' }}>
     <div class="{{ $container_classes }}">
         <div class="vlx-text">
-            {!! vlx_replace_placeholders($text) !!}
+            {!! vlxReplacePlaceholders($text) !!}
         </div>
         <div class="vlx-image">
             @if (isset($image))

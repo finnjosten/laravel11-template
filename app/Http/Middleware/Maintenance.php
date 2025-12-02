@@ -27,7 +27,7 @@ class Maintenance
             return response()->view('pages.maintenance');
         }
 
-        if (str_contains($request->url(), vlx_get_account_url()) || str_contains($request->url(), vlx_get_auth_url()) || str_contains($request->url(), 'api/')) {
+        if (str_contains($request->url(), vlxGetAccountUrl()) || str_contains($request->url(), vlxGetAuthUrl()) || str_contains($request->url(), 'api/')) {
             return $next($request);
         }
 

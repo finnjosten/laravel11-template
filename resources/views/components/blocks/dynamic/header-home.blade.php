@@ -10,7 +10,7 @@
 <section class="{{ $block_classes }}" {{ $id ? "id='$id'" : '' }}>
     <div class="container">
         <div class="vlx-text">
-            {!! vlx_replace_placeholders($text) !!}
+            {!! vlxReplacePlaceholders($text) !!}
         </div>
     </div>
 </section>

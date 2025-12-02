@@ -1,6 +1,19 @@
 @php
+
+$mainMenu = [
+    [
+        "name" => "Home",
+        "link" => route('pages.home')
+    ],
+    [
+        "name" => "Profile",
+        "link" => route('profile')
+    ],
+];
+$mainMenu = vlxCastToObject($mainMenu);;
+
 // Only load admin routes if we're in the dashboard
-if (Str::contains(request()->url(), vlx_get_env_string('SETTING_ACCOUNT_URL'))) {
+if (Str::contains(request()->url(), vlxGetEnvString('SETTING_ACCOUNT_URL'))) {
     $adminRoutes = [
         "default" => [
             [
@@ -14,34 +27,27 @@ if (Str::contains(request()->url(), vlx_get_env_string('SETTING_ACCOUNT_URL'))) 
         ],
         "admin" => [
             [
-                "name" => "Pages",
-                "link" => route('dashboard.pages')
+                "name" => "Users",
+                "link" => route('dashboard.user')
             ],
             [
-                "name" => "Menus",
-                "link" => route('dashboard.menus')
+                "name" => "Roles",
+                "link" => route('dashboard.role')
             ],
             [
                 "name" => "Contact",
                 "link" => route('dashboard.contact')
             ],
-            [
-                "name" => "Users",
-                "link" => route('dashboard.user')
-            ],
         ]
     ];
-    $adminRoutes = vlx_cast_to_object($adminRoutes);
+    $adminRoutes = vlxCastToObject($adminRoutes);
 }
-
-// Get the main menu
-$mainMenu = \App\Models\Menu::where('location', 'main')->first();
 @endphp
 
 <header class="vlx-navbar">
     <div class="vlx-navbar__container">
-        <a class="vlx-navbar__sitename" href="{{ route('home') }}">
-            <h2>{{ vlx_get_env_string('APP_NAME') }}</h2>
+        <a class="vlx-navbar__sitename" href="{{ route('redirect.home') }}">
+            <h2>{{ vlxGetEnvString('APP_NAME') }}</h2>
         </a>
 
         <nav class="vlx-navbar__menu">
@@ -54,7 +60,7 @@ $mainMenu = \App\Models\Menu::where('location', 'main')->first();
                         </a>
                     @endforeach
                 @endif
-                @if (isset($adminRoutes->admin) && auth()->user() && auth()->user()->isAdmin())
+                @if (isset($adminRoutes->admin) && vlxCheckPermission('menu.admin'))
                     @foreach ($adminRoutes->admin as $route)
                         <a class="vlx-navbar__link" href="{{ $route->link }}">
                             <p class="vlx-navbar__text">{{ $route->name }}</p>
@@ -63,30 +69,11 @@ $mainMenu = \App\Models\Menu::where('location', 'main')->first();
                 @endif
             @else
                 {{-- Regular Navigation from Menu System --}}
-                @if ($mainMenu)
-                    @foreach ($mainMenu->items as $item)
-                        @if ($item->shouldDisplay())
-                            @if ($item->children->count() > 0)
-                                <div class="vlx-navbar__dropdown">
-                                    <a class="vlx-navbar__link" href="{{ $item->url() }}">
-                                        <p class="vlx-navbar__text">{{ $item->title }}</p>
-                                    </a>
-                                    <div class="vlx-navbar__dropdown-content">
-                                        @foreach ($item->children as $child)
-                                            @if ($child->shouldDisplay())
-                                                <a class="vlx-navbar__link" href="{{ $child->url() }}">
-                                                    <p class="vlx-navbar__text">{{ $child->title }}</p>
-                                                </a>
-                                            @endif
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @else
-                                <a class="vlx-navbar__link" href="{{ $item->url() }}">
-                                    <p class="vlx-navbar__text">{{ $item->title }}</p>
-                                </a>
-                            @endif
-                        @endif
+                @if ($mainMenu && vlxCheckPermission('menu.user'))
+                    @foreach ($mainMenu as $item)
+                        <a class="vlx-navbar__link" href="{{ $item->link }}">
+                            <p class="vlx-navbar__text">{{ $item->name }}</p>
+                        </a>
                     @endforeach
                 @endif
             @endif

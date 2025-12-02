@@ -1,18 +1,15 @@
 <?php
 
-
+    use Illuminate\Support\Facades\Log;
+    use Illuminate\Support\Facades\Crypt;
 
 
     // Meta data
     /**
      * Set meta data for a page
      */
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Crypt;
-
-    if (! function_exists('vlx_set_page_meta')) {
-        function vlx_set_page_meta($custom = null) {
+    if (! function_exists('vlxSetPageMeta')) {
+        function vlxSetPageMeta($custom = null) {
             global $site;
             if ($custom) {
                 echo "<meta name='description' content='$custom'>";
@@ -29,8 +26,8 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Set meta data for a page that is used by socials
      */
-    if (! function_exists('vlx_set_social_meta')) {
-        function vlx_set_social_meta() {
+    if (! function_exists('vlxSetSocialMeta')) {
+        function vlxSetSocialMeta() {
             echo '
                 <meta property="og:title" content="' . env("APP_NAME") . '">
                 <meta property="og:description" content="'. env("APP_DESCRIPTION") .'">
@@ -83,8 +80,8 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Format a string (remove underscores and semicolons)
      */
-    if (! function_exists('vlx_format')) {
-        function vlx_format($string) {
+    if (! function_exists('vlxFormat')) {
+        function vlxFormat($string) {
 
             if(str_contains($string, '_')) { $string = str_replace('_', ' ', $string); }
             if(str_contains($string, ';')) { $string = str_replace(';', '', $string); }
@@ -97,24 +94,9 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Format a number
      */
-    if (! function_exists('vlx_number_format')) {
-        function vlx_number_format($input, $decimals){
+    if (! function_exists('vlxNumberFormat')) {
+        function vlxNumberFormat($input, $decimals){
             return number_format($input, $decimals, '.', ',');
-        }
-    }
-
-    /**
-     * Format a route name
-     */
-    if (! function_exists('vlx_format_route_name')) {
-        function vlx_format_route_name($string) {
-
-            $string = explode('.', $string)[0];
-            $string = str_replace('-', ' ', $string);
-            $string = ucwords($string);
-
-            return $string;
-
         }
     }
 
@@ -125,8 +107,8 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Slugify a string
      */
-    if (! function_exists('vlx_slugify')) {
-        function vlx_slugify($string) {
+    if (! function_exists('vlxSlugify')) {
+        function vlxSlugify($string) {
             return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $string), '-'));
         }
     }
@@ -134,13 +116,13 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Emailfy a name
      */
-    if (! function_exists('vlx_emailfy')) {
-        function vlx_emailfy($name) {
+    if (! function_exists('vlxEmailfy')) {
+        function vlxEmailfy($name) {
 
             $email = strtolower($name);
             $email = str_replace('.', '', $email);
             $email = str_replace(' ', '.', $email);
-            $email = $email . '@' . vlx_get_app_domain();
+            $email = $email . '@' . vlxGetAppDomain();
 
             return $email;
 
@@ -148,50 +130,10 @@ use Illuminate\Support\Facades\Crypt;
     }
 
     /**
-     * Get propper uptime back
-     */
-    if (! function_exists('vlx_get_uptime')) {
-        function vlx_get_uptime($uptime) {
-
-            $days = explode(' ', $uptime)[3];
-            $hours_and_min = explode(' ', $uptime)[6];
-
-            if (isset($days)) {
-
-                if ($days == 0) {
-                    $days = '';
-                } else {
-                    $days = $days . 'd';
-                }
-            }
-            if (isset($hours_and_min)) {
-                $hours_and_min = trim($hours_and_min, ',');
-                $hours = explode(':', $hours_and_min)[0];
-                $min = explode(':', $hours_and_min)[1];
-
-                if ($hours == 0) {
-                    $hours = '';
-                } else {
-                    $hours = $hours . 'h';
-                }
-
-                if ($min == 0) {
-                    $min = '';
-                } else {
-                    $min = $min . 'm';
-                }
-
-            }
-
-            return $days . ' ' . $hours . ' ' . $min;
-        }
-    }
-
-    /**
      * Cast an array to an object
      */
-    if (! function_exists('vlx_cast_to_object')) {
-        function vlx_cast_to_object($array) {
+    if (! function_exists('vlxCastToObject')) {
+        function vlxCastToObject($array) {
             if (is_array($array)) {
                 return (object) array_map(__FUNCTION__, $array);
             } else {
@@ -203,8 +145,8 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Cast an object to an array
      */
-    if (! function_exists('vlx_cast_to_array')) {
-        function vlx_cast_to_array($object) {
+    if (! function_exists('vlxCastToArray')) {
+        function vlxCastToArray($object) {
             if (is_object($object)) {
                 $object = (array) $object;
                 return array_map(__FUNCTION__, $object);
@@ -217,13 +159,13 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Replace placeholders in a string
      */
-    if (! function_exists('vlx_replace_placeholders')) {
-        function vlx_replace_placeholders($string) {
+    if (! function_exists('vlxReplacePlaceholders')) {
+        function vlxReplacePlaceholders($string) {
 
             if (str_contains($string, '%APP_NAME%')) $string = str_replace('%APP_NAME%', env('APP_NAME'), $string);
             if (str_contains($string, '%APP_URL%')) $string = str_replace('%APP_URL%', env('APP_URL'), $string);
             if (str_contains($string, '%APP_DESCRIPTION%')) $string = str_replace('%APP_DESCRIPTION%', env('APP_DESCRIPTION'), $string);
-            if (str_contains($string, '%APP_DOMAIN%')) $string = str_replace('%APP_DOMAIN%', vlx_get_app_domain(), $string);
+            if (str_contains($string, '%APP_DOMAIN%')) $string = str_replace('%APP_DOMAIN%', vlxGetAppDomain(), $string);
 
 
             return $string;
@@ -237,8 +179,8 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Add a slash at the start of a string
      */
-    if (! function_exists('vlx_start_slash_it')) {
-        function vlx_start_slash_it($string) {
+    if (! function_exists('vlxStartSlashIt')) {
+        function vlxStartSlashIt($string) {
 
             $string = trim($string, '/');
             $string = '/' . $string;
@@ -251,8 +193,8 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Add a slash at the end of a string
      */
-    if (!function_exists('vlx_end_slash_it')) {
-        function vlx_end_slash_it($string) {
+    if (!function_exists('vlxEndSlashIt')) {
+        function vlxEndSlashIt($string) {
 
             Log::debug($string);
 
@@ -273,11 +215,11 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Get the account url
      */
-    if (! function_exists('vlx_get_account_url')) {
-        function vlx_get_account_url() {
+    if (! function_exists('vlxGetAccountUrl')) {
+        function vlxGetAccountUrl() {
 
             $url = !empty(env('SETTING_ACCOUNT_URL')) ? env('SETTING_ACCOUNT_URL') : 'account';
-            return vlx_start_slash_it($url);
+            return vlxStartSlashIt($url);
 
         }
     }
@@ -285,11 +227,11 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Get the admin url
      */
-    if (! function_exists('vlx_get_admin_url')) {
-        function vlx_get_admin_url() {
+    if (! function_exists('vlxGetAdminUrl')) {
+        function vlxGetAdminUrl() {
 
             $url = !empty(env('SETTING_ADMIN_URL')) ? env('SETTING_ADMIN_URL') : 'admin';
-            return vlx_start_slash_it($url);
+            return vlxStartSlashIt($url);
 
         }
     }
@@ -297,11 +239,11 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Get the auth url
      */
-    if (! function_exists('vlx_get_auth_url')) {
-        function vlx_get_auth_url() {
+    if (! function_exists('vlxGetAuthUrl')) {
+        function vlxGetAuthUrl() {
 
             $url = !empty(env('SETTING_AUTH_URL')) ? env('SETTING_AUTH_URL') : 'auth';
-            return vlx_start_slash_it($url);
+            return vlxStartSlashIt($url);
 
         }
     }
@@ -313,8 +255,8 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Get the path to something
      */
-    if (! function_exists('vlx_path_to_something')) {
-        function vlx_path_to_something() {
+    if (! function_exists('vlxPathToSomething')) {
+        function vlxPathToSomething() {
 
             /* $path = env('');
             return $path; */
@@ -329,8 +271,8 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Get the domain of the app
      */
-    if (! function_exists('vlx_get_app_domain')) {
-        function vlx_get_app_domain() {
+    if (! function_exists('vlxGetAppDomain')) {
+        function vlxGetAppDomain() {
 
             $domain = env('APP_DOMAIN');
             $domain = str_replace(['http:', 'https:', '/'], '', $domain);
@@ -347,8 +289,8 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Get a string from the ENV file (unless it contains a "KEY", "API", "USERNAME", "PASS")
      */
-    if (! function_exists('vlx_get_env_string')) {
-        function vlx_get_env_string($env_key) {
+    if (! function_exists('vlxGetEnvString')) {
+        function vlxGetEnvString($env_key) {
 
             //if(str_contains($env_key, 'KEY')) return null;
             if(str_contains($env_key, 'API')) return null;
@@ -356,7 +298,7 @@ use Illuminate\Support\Facades\Crypt;
             //if(str_contains($env_key, 'PASS')) return null;
 
             $string = env($env_key);
-            $string = vlx_format($string);
+            $string = vlxFormat($string);
 
             return $string;
         }
@@ -369,13 +311,35 @@ use Illuminate\Support\Facades\Crypt;
     /**
      * Check if string is error
      */
-    if (! function_exists('vlx_error')) {
-        function vlx_error($str) {
+    if (! function_exists('vlxError')) {
+        function vlxError($str) {
             if (is_string($str) && str_starts_with($str, 'error:')) {
                 return true;
             }
             return false;
         }
+    }
+
+
+    // Check a users permissions
+    if (!function_exists('vlxCheckPermission')) {
+        /**
+         * Check if the currently authenticated user has the given permissions
+         *
+         * @param array|string $permissions Single permission or array of permissions
+         * @param bool $useResponse Whether to throw/return HTTP response or just return bool
+         * @return bool|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+         */
+        function vlxCheckPermission($permissions, bool $useResponse = false) {
+            $controller = app(\App\Http\Controllers\Controller::class);
+
+            // Ensure array
+            $permissions = is_array($permissions) ? $permissions : [$permissions];
+
+            return $controller->checkPermission($permissions, $useResponse);
+        }
+    } else {
+        Log::warning('Function vlxCheckPermission already exists in helpers.php');
     }
 
 

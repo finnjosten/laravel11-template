@@ -24,6 +24,6 @@ class UserStored
      */
     public function __construct(User $user)
     {
-        $this->user = vlx_cast_to_object($user->only(['name', 'email', 'uuid', 'id']));
+        $this->user = vlxCastToObject($user->only(['name', 'email', 'uuid', 'id']));
     }
 }

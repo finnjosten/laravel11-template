@@ -1,6 +1,6 @@
 <!-- Meta Tags -->
-{!! vlx_set_page_meta() !!}
-{!! vlx_set_social_meta() !!}
+{!! vlxSetPageMeta() !!}
+{!! vlxSetSocialMeta() !!}
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">

@@ -24,7 +24,7 @@ class UserVerified
      */
     public function __construct(User $user, bool $admin_verified = false)
     {
-        $this->user = vlx_cast_to_object($user->only(['name', 'email', 'uuid', 'id']));
+        $this->user = vlxCastToObject($user->only(['name', 'email', 'uuid', 'id']));
         $this->admin_verified = $admin_verified;
     }
 }
